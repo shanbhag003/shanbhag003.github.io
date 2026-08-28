@@ -29,7 +29,7 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; scroll-behavior: smooth; }
 
 body {
   margin: 0;
@@ -57,7 +57,7 @@ code { font-family: var(--mono); font-size: .875em; color: var(--data); }
   font-family: var(--mono); font-size: .6875rem;
   letter-spacing: .09em; text-transform: uppercase; color: var(--muted-2);
 }
-.tally .wrap { display: flex; gap: 1.25rem; align-items: center; min-height: 34px; flex-wrap: wrap; }
+.tally .wrap { display: flex; gap: 1.25rem; align-items: center; min-height: 34px; flex-wrap: nowrap; overflow: hidden; white-space: nowrap; }
 .tally b { color: var(--muted); font-weight: 500; }
 .tally .sep { color: var(--line-2); }
 .dot {
@@ -137,7 +137,7 @@ section + section { border-top: 1px solid var(--line); }
 /* ---------- claim cards ---------- */
 
 .claims { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1px; background: var(--line); border: 1px solid var(--line); }
-@media (max-width: 820px) { .claims { grid-template-columns: 1fr; } }
+@media (max-width: 900px) { .claims { grid-template-columns: 1fr; } }
 .claim { background: var(--ink); padding: clamp(1.5rem, 3vw, 2.15rem); display: flex; flex-direction: column; transition: background .2s; }
 .claim:hover { background: var(--ink-2); }
 .claim h3 { font-size: 1.0625rem; line-height: 1.32; }
@@ -300,7 +300,7 @@ section.panel + section.panel { border-top: 0; }
    620px (phone). Everything above is unchanged.
    ============================================================ */
 
-@media (max-width: 900px) {
+@media (max-width: 680px) {
   .nav .wrap { flex-wrap: wrap; row-gap: 0; min-height: 0; padding-top: .7rem; }
   .brand { flex: 1 1 auto; padding-bottom: .7rem; }
   /* nav becomes its own full-width scrolling row, edge to edge */
@@ -314,7 +314,7 @@ section.panel + section.panel { border-top: 0; }
   .nav a:not(.brand) { padding: .85rem 0; white-space: nowrap; }
 }
 
-@media (max-width: 620px) {
+@media (max-width: 680px) {
   /* tighter vertical rhythm — a phone screen is scarce */
   section { padding: 2.75rem 0; }
   .hero { padding-top: 2.25rem; padding-bottom: 2.25rem; }
@@ -378,7 +378,7 @@ section.panel + section.panel { border-top: 0; }
 }
 
 /* scroll affordance on the two horizontally scrolling rows */
-@media (max-width: 900px) {
+@media (max-width: 680px) {
   .nav { background: rgba(10,14,20,.97); }
   .subnav { background: rgba(10,14,20,.97); }
   .nav::after, .subnav::after {
@@ -400,7 +400,18 @@ section.panel + section.panel { border-top: 0; }
   .btn { flex: 1 1 100%; font-size: .6875rem; }
 }
 
-/* no hover lift on any touch device, regardless of width */
+/* touch devices: tap targets and no hover artefacts, at any screen width */
 @media (hover: none) {
-  .btn:hover, .card:hover { transform: none; }
+  .btn:hover, .card:hover, .claim:hover { transform: none; }
+  .nav a:not(.brand) { padding: .95rem 0; }
+  .foot-links { gap: 0; }
+  .foot-links a { min-height: 44px; display: flex; align-items: center; }
+  .claim a, .card .go { padding: .35rem 0; }
+}
+
+/* tablet / large-phone band: desktop structure, but the vw-based padding
+   opens up too much dead air between the hero and the first section */
+@media (max-width: 900px) and (min-width: 681px) {
+  section { padding: 3.25rem 0; }
+  .hero { padding-top: 3rem; padding-bottom: 2.5rem; }
 }

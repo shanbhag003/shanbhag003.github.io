@@ -18,17 +18,27 @@
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(setNavH);
   }
 
-  /* ---------- scroll reveal ---------- */
+  /* ---------- scroll reveal ----------
+     A tall block (three stacked claim cards on a phone) must not sit
+     invisible while occupying space, so this fires the moment any part
+     of an element edges into view — and a failsafe reveals everything
+     regardless, so content can never be stranded at opacity 0. */
   var targets = document.querySelectorAll(".reveal");
-  if (reduce || !("IntersectionObserver" in window)) {
+  var showAll = function () {
     Array.prototype.forEach.call(targets, function (el) { el.classList.add("in"); });
+  };
+
+  if (reduce || !("IntersectionObserver" in window)) {
+    showAll();
   } else {
     var io = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
         if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
       });
-    }, { rootMargin: "0px 0px -12% 0px", threshold: 0.08 });
+    }, { rootMargin: "0px 0px -40px 0px", threshold: 0 });
     Array.prototype.forEach.call(targets, function (el) { io.observe(el); });
+    setTimeout(showAll, 2500);
+    window.addEventListener("pageshow", function (e) { if (e.persisted) showAll(); });
   }
 
   /* ---------- scroll progress ---------- */
