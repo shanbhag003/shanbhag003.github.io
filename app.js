@@ -3,6 +3,21 @@
   "use strict";
   var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
+  /* ---------- measure the sticky header ----------
+     The nav becomes two rows on narrow screens, so its height can't
+     be a constant. The sub-nav's sticky offset and every anchor's
+     scroll-margin read this variable. */
+  var nav = document.querySelector(".nav");
+  if (nav) {
+    var setNavH = function () {
+      document.documentElement.style.setProperty("--nav-h", nav.offsetHeight + "px");
+    };
+    setNavH();
+    window.addEventListener("resize", setNavH);
+    window.addEventListener("orientationchange", setNavH);
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(setNavH);
+  }
+
   /* ---------- scroll reveal ---------- */
   var targets = document.querySelectorAll(".reveal");
   if (reduce || !("IntersectionObserver" in window)) {

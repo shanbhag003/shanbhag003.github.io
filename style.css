@@ -23,6 +23,7 @@
   --mono: "JetBrains Mono", ui-monospace, monospace;
 
   --wrap: 1140px;
+  --nav-h: 64px;
   --gut: clamp(1.25rem, 4vw, 3.5rem);
   --ease: cubic-bezier(.16,.84,.44,1);
 }
@@ -40,7 +41,8 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-img { max-width: 100%; display: block; }
+img { max-width: 100%; height: auto; display: block; }
+p, li, td, th, h1, h2, h3, h4 { overflow-wrap: break-word; }
 a { color: inherit; }
 ::selection { background: var(--live); color: #04070c; }
 code { font-family: var(--mono); font-size: .875em; color: var(--data); }
@@ -72,7 +74,8 @@ code { font-family: var(--mono); font-size: .875em; color: var(--data); }
 /* ---------- nav ---------- */
 
 .nav { border-bottom: 1px solid var(--line); background: rgba(10,14,20,.86); backdrop-filter: blur(12px); position: sticky; top: 0; z-index: 40; }
-.nav .wrap { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 64px; flex-wrap: wrap; }
+.nav .wrap { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 64px; }
+.nav ul { -webkit-overflow-scrolling: touch; }
 .brand { font-family: var(--display); font-weight: 600; font-size: 1.0625rem; letter-spacing: -.02em; text-decoration: none; }
 .brand span { color: var(--live); }
 .nav ul { list-style: none; display: flex; gap: clamp(.9rem, 2.4vw, 2rem); margin: 0; padding: 0; }
@@ -158,7 +161,7 @@ section + section { border-top: 1px solid var(--line); }
 
 /* ---------- project sub-nav + panels ---------- */
 
-.subnav { position: sticky; top: 64px; z-index: 30; background: rgba(10,14,20,.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
+.subnav { position: sticky; top: var(--nav-h); z-index: 30; background: rgba(10,14,20,.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--line); }
 .subnav .wrap { display: flex; gap: 0; overflow-x: auto; scrollbar-width: none; }
 .subnav .wrap::-webkit-scrollbar { display: none; }
 .tab {
@@ -177,7 +180,7 @@ section + section { border-top: 1px solid var(--line); }
 .panel[hidden] { display: none; }
 @keyframes panelIn { from { opacity: 0; transform: translateY(14px) } to { opacity: 1; transform: none } }
 
-.proj { scroll-margin-top: 120px; }
+.proj { scroll-margin-top: calc(var(--nav-h) + 4rem); }
 .proj-head { display: flex; align-items: baseline; gap: 1rem; flex-wrap: wrap; margin-bottom: .35rem; }
 .proj-index { font-family: var(--mono); font-size: .875rem; color: var(--live); letter-spacing: .06em; }
 .proj-tag { font-family: var(--mono); font-size: .6875rem; letter-spacing: .07em; text-transform: uppercase; color: var(--muted-2); margin-bottom: 1.6rem; }
@@ -202,7 +205,8 @@ td:not(:first-child) { font-variant-numeric: tabular-nums; }
 tbody tr { transition: background .15s; }
 tbody tr:hover { background: var(--ink-2); }
 tbody tr.win td, tbody tr.win td strong { color: var(--data); }
-.wrap-table { overflow-x: auto; }
+.wrap-table { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.wrap-table table { min-width: 30rem; }
 
 figure { margin: 2.5rem 0; }
 figure img { border: 1px solid var(--line); }
@@ -289,3 +293,114 @@ ul.plain li::before { content: ""; position: absolute; left: 0; top: .74em; widt
 
 /* panels are siblings; only one shows, so suppress the section divider */
 section.panel + section.panel { border-top: 0; }
+
+/* ============================================================
+   MOBILE
+   Two deliberate breakpoints: 900px (tablet/small laptop) and
+   620px (phone). Everything above is unchanged.
+   ============================================================ */
+
+@media (max-width: 900px) {
+  .nav .wrap { flex-wrap: wrap; row-gap: 0; min-height: 0; padding-top: .7rem; }
+  .brand { flex: 1 1 auto; padding-bottom: .7rem; }
+  /* nav becomes its own full-width scrolling row, edge to edge */
+  .nav ul {
+    order: 3; flex: 1 0 100%;
+    gap: 1.4rem; overflow-x: auto; scrollbar-width: none;
+    margin: 0 calc(-1 * var(--gut)); padding: 0 var(--gut);
+    border-top: 1px solid var(--line);
+  }
+  .nav ul::-webkit-scrollbar { display: none; }
+  .nav a:not(.brand) { padding: .85rem 0; white-space: nowrap; }
+}
+
+@media (max-width: 620px) {
+  /* tighter vertical rhythm — a phone screen is scarce */
+  section { padding: 2.75rem 0; }
+  .hero { padding-top: 2.25rem; padding-bottom: 2.25rem; }
+
+  /* the tally strip is context, not content: keep only what fits on one line */
+  .tally .wrap { gap: .7rem; min-height: 30px; }
+  .tally span:nth-child(4), .tally span:nth-child(5) { display: none; }
+
+  /* headline needs a smaller floor or it runs to six lines */
+  h1 { font-size: clamp(1.85rem, 9vw, 2.5rem); }
+  h2 { font-size: clamp(1.4rem, 6.5vw, 1.9rem); }
+  .hero h1 .sub { font-size: 1.05rem; margin-top: .55rem; }
+  p.lede { font-size: 1.0625rem; }
+  .quote { font-size: 1.1rem; }
+
+  /* 44px minimum tap targets, and buttons that don't orphan */
+  .actions { gap: .6rem; }
+  .btn { padding: .95rem 1.15rem; flex: 1 1 auto; text-align: center; min-height: 46px;
+         display: inline-flex; align-items: center; justify-content: center; }
+  .btn:hover { transform: none; }
+  .tab { padding: 1rem .85rem; min-height: 48px; }
+  .card:hover { transform: none; }
+  .clients li:hover { border-color: var(--line); }
+
+  /* the tab already marks position, so drop both ordinals on a phone */
+  .tab .n { display: none; }
+  .proj-index { display: none; }
+  .proj-head { gap: 0; }
+
+  /* content blocks */
+  .field, .ledger, figure, .callout { margin: 1.75rem 0; }
+  .ledger { padding: 1.15rem; margin-left: calc(-1 * var(--gut) / 2); margin-right: calc(-1 * var(--gut) / 2);
+            padding-left: calc(var(--gut) / 2 + .65rem); padding-right: calc(var(--gut) / 2 + .65rem); }
+  .callout { padding-left: 1rem; margin-left: 0; }
+  .cards { gap: 1rem; }
+  .card { flex: 1 1 100%; padding: 1.35rem; }
+  .claim { padding: 1.4rem; }
+
+  /* tables get a visible edge fade so it's obvious they scroll */
+  .wrap-table { position: relative; }
+  .wrap-table::after {
+    content: ""; position: absolute; top: 0; right: 0; width: 2.25rem; height: 100%;
+    background: linear-gradient(90deg, rgba(10,14,20,0), var(--ink)); pointer-events: none;
+  }
+  table { font-size: .75rem; }
+  th, td { padding: .55rem .6rem; }
+  caption { font-size: .625rem; }
+
+  /* experience log reads as stacked entries */
+  .log li { padding: .8rem 0; }
+  .log .when { color: var(--live); font-size: .6875rem; }
+  .year { margin-top: 2.25rem; }
+  .cap { padding: 1.5rem 0; }
+
+  .foot-grid { gap: 1.75rem; }
+  .foot-base { margin-top: 2rem; flex-direction: column; gap: .5rem; }
+
+  /* reveal travels less distance on a small screen */
+  .reveal { transform: translateY(12px); }
+  .rise { transform: translateY(14px); }
+}
+
+/* scroll affordance on the two horizontally scrolling rows */
+@media (max-width: 900px) {
+  .nav { background: rgba(10,14,20,.97); }
+  .subnav { background: rgba(10,14,20,.97); }
+  .nav::after, .subnav::after {
+    content: ""; position: absolute; right: 0; bottom: 1px; width: 2.5rem; height: 42px;
+    background: linear-gradient(90deg, rgba(10,14,20,0), rgba(10,14,20,.95));
+    pointer-events: none; z-index: 1;
+  }
+  .subnav::after { height: calc(100% - 2px); }
+}
+
+/* narrow phones — squeeze the nav so all five items fit without scrolling */
+@media (max-width: 430px) {
+  .nav ul { gap: 1rem; }
+  .nav a:not(.brand) { font-size: .6875rem; letter-spacing: .03em; }
+}
+@media (max-width: 380px) {
+  .nav ul { gap: .8rem; }
+  h1 { font-size: 1.7rem; }
+  .btn { flex: 1 1 100%; font-size: .6875rem; }
+}
+
+/* no hover lift on any touch device, regardless of width */
+@media (hover: none) {
+  .btn:hover, .card:hover { transform: none; }
+}
