@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Projects — Kartik Shanbhag</title>
+<meta name="description" content="Three systems designed, built and deployed alone: a self-updating Premier League forecast, a live cricket digest with two personas, and an autonomous FPL manager. Each with a live link, a public repo, and a section on what failed.">
+<link rel="canonical" href="https://shanbhag003.com/projects.html">
+<meta name="theme-color" content="#14001a">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://shanbhag003.com/projects.html">
+<meta property="og:title" content="Projects — Kartik Shanbhag">
+<meta property="og:description" content="A self-updating Premier League forecast, a live cricket digest, and an autonomous FPL manager. Live links, public code, and the experiments that failed.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="tally">
+  <div class="wrap">
+    <span><span class="dot"></span>Three systems</span>
+    <span class="sep">/</span>
+    <span>Two running live</span>
+    <span class="sep">/</span>
+    <span><b>All code public</b></span>
+  </div>
+</div>
+
+<nav class="nav">
+  <div class="wrap">
+    <a class="brand" href="index.html">Kartik Shanbhag<span>.</span></a>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="projects.html" aria-current="page">Projects</a></li>
+      <li><a href="experience.html">Experience</a></li>
+      <li><a href="articles.html">Articles</a></li>
+      <li><a href="visualisations.html">Data</a></li>
+    </ul>
+  </div>
+</nav>
+
+<main id="main">
+
+<header class="hero wrap">
+  <p class="eyebrow">Projects</p>
+  <h1>Three systems I built alone.</h1>
+  <p class="lede measure">Each one has a live link, a public repository, and a section on what failed. The numbers on this page are reproducible — the code that produced them is one click away.</p>
+</header>
+
+<!-- ============ 01 PL SUPERCOMPUTER ============ -->
+<section class="proj" id="pl-supercomputer">
+  <div class="wrap">
+    <div class="proj-head">
+      <span class="proj-index">01</span>
+      <h2>Premier League Supercomputer</h2>
+    </div>
+    <p class="proj-tag">Python · Dixon-Coles · Monte Carlo · GitHub Actions · Live</p>
+
+    <p class="lede measure">An expected-goals model that simulates the rest of the season 20,000 times, refits itself after every gameweek, grades its own past predictions against the bookmakers, and emails the result. It runs on GitHub Actions' free tier and costs nothing.</p>
+
+    <div class="actions">
+      <a class="btn btn-live" href="https://shanbhag003.github.io/pl-supercomputer/">View the live forecast</a>
+      <a class="btn" href="https://github.com/shanbhag003/pl-supercomputer">Repository</a>
+      <a class="btn" href="https://github.com/shanbhag003/pl-supercomputer/blob/main/HOW-IT-WORKS.md">How it works</a>
+    </div>
+
+    <div class="field measure">
+      <p class="eyebrow">The problem</p>
+      <p>Pre-season football forecasts are mostly assertion. They're published once, never scored, and the reader has no way to know whether the model was right last year. I wanted the opposite: a forecast that keeps a permanent record of what it predicted before each gameweek, and marks itself against the closing market.</p>
+    </div>
+
+    <div class="field measure">
+      <p class="eyebrow">The hard constraint</p>
+      <p>Zero budget. No paid data, no paid compute. Everything runs inside GitHub Actions' free tier on free public sources — Understat, football-data.co.uk, the Fantasy Premier League API, Wikipedia. A full run — refit, 20,000 simulations, render, email — takes about 40 seconds on one CPU core.</p>
+    </div>
+
+    <div class="field measure">
+      <p class="eyebrow">What it actually does</p>
+      <p>Dixon-Coles attack and defence ratings on a 70/30 blend of non-penalty expected goals and actual goals, twelve seasons deep, exponentially weighted with a 154-day half-life. A regularised plus-minus model over 200,000 player-match records turns squads into computable ratings, which is what makes transfers register at all.</p>
+      <p>Minutes are budgeted per club and redistributed <strong>within position</strong> when a player is unavailable — a missing striker is covered by the backup striker, not by a centre-back. That single rule is what lets squad depth show up in the numbers: a club losing a forward barely moves if two capable deputies exist, while a club with one specialist in that role is hit much harder.</p>
+      <p>Uncertainty comes from two sources, both required. Bootstrap resampling captures how little we know about the ratings themselves; a drift term captures genuine squad change over a summer. Bootstrap alone gives 80% intervals that cover only 55–70% of outcomes. Adding the measured drift brings coverage to 77%.</p>
+    </div>
+
+    <div class="field">
+      <p class="eyebrow data">Validation — walk-forward, always</p>
+      <p class="measure">The model is refitted using only data available at the time and never sees a result before predicting it.</p>
+      <div class="wrap-table">
+      <table>
+        <caption>Match level · 1,520 held-out matches across four seasons never used for tuning</caption>
+        <thead><tr><th>Ranked probability score</th><th>Model</th><th>Bookmaker</th></tr></thead>
+        <tbody>
+          <tr><td>All held-out matches</td><td><strong>0.20373</strong></td><td>0.20153</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p class="measure">Within 1.1% of the closing market, on free data, with no team news.</p>
+      <div class="wrap-table">
+      <table>
+        <caption>Season level · seven pre-season forecasts, fitted the day before each season started</caption>
+        <thead><tr><th>Model</th><th>Mean absolute error (points)</th><th>Rank correlation</th></tr></thead>
+        <tbody>
+          <tr><td>Naive baseline — last season's table</td><td>10.95</td><td>0.690</td></tr>
+          <tr><td>Club ratings only</td><td>9.389</td><td>0.758</td></tr>
+          <tr><td>Plus squad layer</td><td>9.264</td><td>0.770</td></tr>
+          <tr class="win"><td><strong>Plus manager layer — shipped</strong></td><td><strong>9.216</strong></td><td><strong>0.772</strong></td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p class="measure">The eventual champion appeared in the model's top three in all seven backtested seasons.</p>
+    </div>
+
+    <div class="ledger" id="rejected">
+      <p class="eyebrow">What was tested and rejected</p>
+      <p class="measure">Four things failed the same gate the shipped layers passed. They are switched off, and the code is still in the repository so the results can be checked.</p>
+      <div class="wrap-table">
+      <table>
+        <thead><tr><th>Rejected</th><th>Why</th></tr></thead>
+        <tbody>
+          <tr><td>Market odds blend</td><td>Marginal error gain, worse ranking and calibration</td></tr>
+          <tr><td>Manager effects, all changes</td><td>Worse on every metric</td></tr>
+          <tr><td>Manager values from foreign leagues</td><td>Player conversion already weak at n≈200</td></tr>
+          <tr><td>Fixture congestion</td><td>Effect reverses sign between eras, fails out-of-sample</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p class="measure"><strong>The manager failure is the one worth reading.</strong> Version one penalised Bournemouth for hiring Iraola and Liverpool for hiring Slot, who then won the league. The layer couldn't distinguish "this manager is worse" from "we have never seen this manager before" — both incoming managers had no Premier League record and were entered as league average. Restricting the layer to moves where <em>both</em> managers have a Premier League record flips the result. That version ships.</p>
+      <p class="measure"><strong>Fixture congestion is the one I most wanted to be true.</strong> I built two datasets for it: 1,488 domestic cup ties and 735 UEFA matches involving English clubs, 2014 to 2026. European knockout ties did appear to leave a defensive mark. Then I backtested it walk-forward across seven seasons and 150 affected matches. Four seasons prefer no adjustment, three prefer the largest one, and across all seven the net effect is +0.00002 — nothing. Shipping it would have meant fitting three seasons of noise, so congestion is not modelled.</p>
+    </div>
+
+    <div class="callout measure">
+      <p class="eyebrow data">A finding I didn't expect</p>
+      <p class="quote">Championship points do not predict Premier League performance.</p>
+      <p>Across 33 promoted clubs since 2015 the correlation is +0.043. Norwich went up with 97 points and were the worst promoted side in the sample; Wolves went up with 99 and were the best. A regression on Championship points performs no better than a flat average, so every promoted club gets the same prior with a deliberately wide error bar.</p>
+    </div>
+
+    <div class="field measure">
+      <p class="eyebrow live">The product decision I'd defend</p>
+      <p>The scheduler doesn't run weekly. It polls every two hours and publishes only when every fixture in a gameweek has been played, a set delay has passed, and that gameweek hasn't already been published. Five gameweeks this season end on a Wednesday, which a fixed weekly cron handles badly.</p>
+      <p>Separately, a refresh run on Fridays and Tuesdays re-reads squads and injuries without emailing. Team news lands on Thursday and Friday while a publish happens on Tuesday — without the refresh, the injury data would be a median of 6.7 days old by the time the next round kicked off. A refresh never writes to the history folder, so the record of what was predicted before each gameweek stays intact for the accuracy scoring.</p>
+    </div>
+
+    <div class="field measure">
+      <p class="eyebrow">Limitations</p>
+      <p>Stated plainly, because a model that hides these isn't worth reading. Pre-season error is around nine points per club, and no pre-season model is much better. Signings from outside Europe's big five leagues are valued at league average. Manager changes where the incoming manager has no Premier League record aren't scored at all. Home advantage is one league-wide value, not per club.</p>
+      <p>And the minute-allocation rules are <strong>reasoned, not backtested</strong>. The backtest uses the minutes players actually recorded, so the 90-minute cap and the positional redistribution never run there and cannot be validated statistically. They are corrections to an obvious error — the previous version sent a missing striker's minutes to the goalkeeper — but the seven-season evidence behind the squad layer measures the layer, not these rules.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 02 CRICKET AI DIGEST ============ -->
+<section class="proj" id="cricket-digest">
+  <div class="wrap">
+    <div class="proj-head">
+      <span class="proj-index">02</span>
+      <h2>Cricket AI Digest</h2>
+    </div>
+    <p class="proj-tag">Node · ESPN Cricket API · Claude · WebSocket</p>
+
+    <p class="lede measure">One live cricket feed in, two reader-specific briefings out. An Analyst view for the facts behind the moment, a Fan view for why the moment matters, both generated from the same raw match state and pushed to a live console.</p>
+
+    <div class="actions">
+      <a class="btn btn-live" href="https://github.com/shanbhag003/cricket-ai-digest">Repository</a>
+    </div>
+
+    <figure>
+      <img src="assets/cricket-digest-console.jpg" alt="The Cricket Digest console during a Test match between Sri Lanka and India, showing the match picker, the current score, and the Analyst and Fan digests side by side." width="918" height="744" loading="lazy">
+      <figcaption>The console during day two of Sri Lanka v India. Same match state, two briefings. The Analyst column gives strike rates, economy and the balls faced; the Fan column explains why the dismissal mattered. Not deployed continuously — the free tier gives 750 instance hours a month and a month is 730.</figcaption>
+    </figure>
+
+    <div class="field measure">
+      <p class="eyebrow">Why this exists</p>
+      <p>A score notification is the same alert for everyone. This is a translation layer. The cricket is incidental — the shape is <em>raw feed, then reasoning layer, then persona-specific briefing</em>, which is the shape of most business data delivery problems I work on professionally.</p>
+    </div>
+
+    <div class="field measure">
+      <p class="eyebrow data">Two gates, doing two different jobs</p>
+      <p>Polling is cheap. Calling a language model on every tick is not, and worse, it produces a stream of digests that say nothing.</p>
+      <ul class="plain">
+        <li>A cheap fingerprint on a 6 KB scoreboard endpoint. Unchanged, and nothing else fires — no further calls at all.</li>
+        <li>A materiality check on the 270 KB summary. A wicket, a new innings, a batter milestone, a follow-on enforced, a fourth-innings target set.</li>
+      </ul>
+      <p>Deliberately invisible: singles, twos, boundaries, dot balls, maidens, over-by-over ticking. The first gate saves bandwidth. The second saves money. Ungated at 60-second polling it would be roughly 480 model calls a day; gated, a whole T20 costs about 14 cents.</p>
+    </div>
+
+    <div class="field">
+      <p class="eyebrow live">The decision I'd defend: thresholds are format-aware</p>
+      <p class="measure">Fifty runs is an hour's grind in a Test and five overs in a T20. Over ten is a routine marker in a Test and the halfway point of a T20 innings. So the thresholds differ, driven by the format ESPN reports.</p>
+      <div class="wrap-table">
+      <table>
+        <thead><tr><th>Trigger</th><th>Test</th><th>ODI</th><th>T20</th></tr></thead>
+        <tbody>
+          <tr><td>Over step</td><td>10</td><td>10</td><td>5</td></tr>
+          <tr><td>Key overs</td><td>80 — second new ball</td><td>10, 40</td><td>6, 16</td></tr>
+          <tr><td>Digest floor</td><td>180s</td><td>120s</td><td>90s</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p class="measure">The key overs are the point. None of them fall on a regular step, so a modulo rule alone misses the T20 powerplay transitions entirely — which are exactly the moments a fan most wants explained.</p>
+    </div>
+
+    <div class="ledger">
+      <p class="eyebrow">What I got wrong, and found by reading the raw payload</p>
+      <p class="measure">Two traps in ESPN's schema, both caught before they shipped and both documented inline in the code.</p>
+      <ul class="plain measure">
+        <li><code>matchcards</code> is <strong>not</strong> an innings list. It's Batting, Bowling and Partnership cards for a <em>single</em> innings. The correct source for runs, wickets and overs is the linescores array on the header competitors.</li>
+        <li>ESPN mirrors <em>bowling</em> overs into the non-batting side's linescore, so a team that hasn't batted at all appears as <code>0/0 (73 ov)</code>. Those rows are dropped. Otherwise the model confidently reports a scoreline that never happened.</li>
+      </ul>
+      <p class="measure">The second one is the lesson, and it's why there's a debug endpoint that returns the exact object handed to the model. <strong>A digest generated from all-null fields still looks like a success in the logs.</strong> If I can't read that JSON and immediately recognise the match, neither can the model.</p>
+    </div>
+
+    <div class="callout measure">
+      <p class="eyebrow data">Hallucination control</p>
+      <p class="quote">An instruction not to invent data does nothing if you hand the model a form with every box empty.</p>
+      <p>The prompt's most important rule is: if a field is absent, omit that point entirely, never estimate. And the generator strips null and empty values before serialising, so the model never sees a blank slot to fill in the first place.</p>
+    </div>
+
+    <div class="field measure">
+      <p class="eyebrow">Honest scope</p>
+      <p>This is a working demonstration of a pattern, not a notification product, and it doesn't compete with Cricbuzz. It depends on an undocumented third-party endpoint with active bot protection, which could stop working at any time. A verified quirk: ESPN returns 403 for browser user-agents from datacenter addresses but 200 for a curl user-agent from the same address. If they tighten that, this stops working and there is no fallback.</p>
+      <p>State lives in memory, so history is lost on restart. Either the panel is labelled session history or it moves to a database. And The Hundred is 100 balls rather than overs, so format detection falls it through to T20 and the over-based triggers there are untested.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 03 FPL ============ -->
+<section class="proj" id="fpl">
+  <div class="wrap">
+    <div class="proj-head">
+      <span class="proj-index">03</span>
+      <h2>FPL Auto Manager</h2>
+    </div>
+    <p class="proj-tag">Python · AWS Lambda · Linear programming · Claude with web search · Live</p>
+
+    <p class="lede measure">An autonomous Fantasy Premier League manager. It rates every player, plans transfers, picks the starting eleven and the captain, submits all of it, and emails the reasoning. It runs unattended on AWS Lambda, publishes its projection before kickoff, and gets marked against a human.</p>
+
+    <div class="actions">
+      <a class="btn btn-live" href="https://shanbhag003.github.io/fpl-auto-manager">Bot versus human, live</a>
+      <a class="btn" href="https://github.com/shanbhag003/fpl-auto-manager">Repository</a>
+    </div>
+
+    <div class="field measure">
+      <p class="eyebrow">Two scores, not one</p>
+      <p>Who you <em>own</em> is a five-gameweek question, because transfers are scarce and a player is bought for a run of fixtures. Who <em>starts</em> is a this-week question. One number can't answer both: weight it forward and captaincy suffers, weight it on this week and transfers become short-sighted. So it computes both.</p>
+    </div>
+
+    <div class="ledger">
+      <p class="eyebrow">The mistake that rebuilt the model</p>
+      <p class="measure">The first version used FPL's own projection field. It turned out to be a placeholder before a season starts — about <strong>24 distinct values across 570 players</strong>, capped at 4.0, so a backup goalkeeper and the best striker in the league scored identically. Ranking on it did real damage: in one run the bot sold three of the squad's best per-game players and bought a forward who had started three games all season.</p>
+      <p class="quote" style="font-family:var(--display);font-size:clamp(1.15rem,2.2vw,1.5rem);font-weight:500;letter-spacing:-.02em;line-height:1.25;color:#fff">The code ran perfectly. The thinking was wrong.</p>
+    </div>
+
+    <div class="field">
+      <p class="eyebrow data">The replacement, and how it was checked</p>
+      <p class="measure">A regression on 874 player-season pairs from 2009 onwards, validated by fitting on the older half of the seasons and testing on the newer.</p>
+      <div class="wrap-table">
+      <table>
+        <thead><tr><th>Predictor</th><th>Out-of-sample R²</th></tr></thead>
+        <tbody>
+          <tr><td>Points per 90 alone</td><td>0.302</td></tr>
+          <tr class="win"><td><strong>Plus expected goal involvement and ICT</strong></td><td><strong>0.368</strong></td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p class="measure">Correlation with next-season output went from 0.30 to 0.49 against a points-only baseline. Expected goal involvement earns its weight because it regresses less than actual goals: a player who created plenty of chances but finished badly is correctly rated above their raw points.</p>
+    </div>
+
+    <div class="field">
+      <p class="eyebrow live">The threshold I had to find by backtest</p>
+      <p class="measure">Embedding last season's data made things <strong>worse</strong> at first. Fringe players topped the rankings, because someone with 90 minutes and one lucky return had a per-90 rate that looked elite. Shrinkage was being applied to live data but not to the snapshot. A backtest on 1,001 player-season pairs gave a clean answer.</p>
+      <div class="wrap-table">
+      <table>
+        <thead><tr><th>Prior-season minutes</th><th>Snapshot</th><th>Price</th><th>Better predictor</th></tr></thead>
+        <tbody>
+          <tr><td>1 – 300</td><td>−0.083</td><td>−0.005</td><td>Price</td></tr>
+          <tr class="win"><td>300 – 900</td><td>0.634</td><td>0.400</td><td>Snapshot</td></tr>
+          <tr class="win"><td>900 – 2000</td><td>0.593</td><td>0.316</td><td>Snapshot</td></tr>
+          <tr class="win"><td>2000+</td><td>0.624</td><td>0.432</td><td>Snapshot</td></tr>
+        </tbody>
+      </table>
+      </div>
+      <p class="measure">Below 300 minutes, last season's rates predict <strong>worse than nothing</strong>. So the snapshot earns weight only past 300 minutes, reaching full weight at 900.</p>
+      <p class="measure">A related judgement: players with fewer than two pre-season friendlies are excluded from the table entirely rather than penalised, because zero minutes is ambiguous. One striker had none because he'd been at the World Cup until mid-July and was then rested. Another had none because of a long-term injury. A third might be out of favour. The data cannot tell them apart, so it doesn't try.</p>
+    </div>
+
+    <div class="field measure">
+      <p class="eyebrow">It degrades instead of failing</p>
+      <p>FPL retired the login endpoint this project depended on, mid-build. Rather than patch around it, I rebuilt the system so that being unable to sign in produces a <em>different</em> outcome rather than a failed one: it emails me the same decisions to apply by hand. No missed deadlines since.</p>
+      <p>The optimiser works the same way. No linear programming layer available means a pure-Python fallback within about 1% of optimal, with a line in the log saying which one ran.</p>
+    </div>
+
+    <div class="callout measure">
+      <p class="eyebrow data">The constraint I'm proudest of</p>
+      <p class="quote">The language model is only ever allowed to lower a rating.</p>
+      <p>Team news — rotation, a manager resting someone, a signing short of match fitness — is read by Claude with web search. It can reduce a player's projection and never raise it, so a wrong call costs at most one player rather than talking the bot into a bad buy. It ran in shadow mode until its judgement had been checked against several gameweeks.</p>
+    </div>
+
+    <div class="field measure">
+      <p class="eyebrow">What it deliberately doesn't do</p>
+      <ul class="plain">
+        <li><strong>Play chips.</strong> Wildcard, Free Hit, Bench Boost and Triple Captain are one-shot decisions worth too much to hand to a threshold. It flags them and stops.</li>
+        <li><strong>Model price changes.</strong> Not attempted.</li>
+        <li><strong>Distinguish reliable from explosive.</strong> It scores averages, so it can't tell a dependable six from a volatile one — which is exactly the difference that wins a gameweek. This is the largest known gap.</li>
+        <li><strong>Plan beyond five gameweeks.</strong> The horizon is a tunable constant.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <div class="foot-grid">
+      <div>
+        <h2>Want to talk about any of these?</h2>
+        <div class="actions">
+          <a class="btn btn-live" href="mailto:kshanbhag231@gmail.com?subject=Hello%20Kartik">Contact me</a>
+          <a class="btn" href="assets/Kartik_Shanbhag_Resume.pdf" download>Download résumé</a>
+        </div>
+      </div>
+      <ul class="foot-links">
+        <li><a href="https://github.com/shanbhag003">GitHub</a></li>
+        <li><a href="https://www.linkedin.com/in/shanbhag003/">LinkedIn</a></li>
+        <li><a href="https://shanbhag003.medium.com/">Medium</a></li>
+        <li><a href="https://public.tableau.com/app/profile/kartik.shanbhag/vizzes">Tableau Public</a></li>
+      </ul>
+    </div>
+    <div class="foot-base">
+      <span>© 2026 Kartik Shanbhag</span>
+      <span>Mumbai, India</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
