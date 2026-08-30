@@ -111,11 +111,19 @@ em { color: #2c3541; }
 section { padding: clamp(3.5rem, 8vw, 6.5rem) 0; }
 section + section { border-top: 1px solid var(--line); }
 
-/* alternating grounds, so the page isn't one flat sheet of white */
-.band-tint { background: var(--band-tint); border-top: 1px solid var(--line); }
-.band-dark {
-  background: var(--band-dark); color: var(--on-dark); border-top: 0;
-}
+/* Every section gets its own ground. Four families, deliberately different
+   in hue rather than four shades of the same grey:
+     default  near-white cool
+     tint     cool blue-grey
+     warm     warm cream
+     dark     deep navy                                                */
+.band-tint { background: var(--band-tint); border-top: 0; }
+.band-warm { background: #f8f5f0; border-top: 0; }
+.band-white { background: #fff; border-top: 0; }
+section.band-tint + section, section.band-warm + section,
+section.band-white + section, section.band-dark + section { border-top: 0; }
+.band-warm .card, .band-tint .card { background: #fff; }
+.band-dark { background: var(--band-dark); color: var(--on-dark); border-top: 0; }
 .band-dark h2, .band-dark strong { color: #fff; }
 .band-dark p { color: #c3cedb; }
 .band-dark .eyebrow { color: #8fb4ff; }
@@ -483,4 +491,40 @@ ul.plain li::before { content: ""; position: absolute; left: 0; top: .74em; widt
   .marquee-track { animation: none; flex-wrap: wrap; width: auto; gap: 1.5rem 2.25rem; }
   .marquee-dup { display: none; }
   .marquee::before, .marquee::after { display: none; }
+}
+
+
+/* ============================================================
+   CUSTOM CURSOR
+   Fine-pointer devices only. A navy arrow by default, the same
+   arrow in blue over anything clickable — the state change is
+   the whole point, otherwise links stop feeling clickable.
+   ============================================================ */
+
+@media (pointer: fine) {
+  body { cursor: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2226%22%20height%3D%2226%22%20viewBox%3D%220%200%2026%2026%22%3E%3Cpath%20d%3D%22M5%202.5%20L5%2020.5%20L9.8%2016%20L12.9%2023%20L16.3%2021.5%20L13.2%2014.6%20L20%2014.3%20Z%22%20fill%3D%22%230d1117%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%221.4%22%20stroke-linejoin%3D%22round%22/%3E%3C/svg%3E") 4 2, auto; }
+  a, button, .tab, summary, [role="tab"], label { cursor: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2226%22%20height%3D%2226%22%20viewBox%3D%220%200%2026%2026%22%3E%3Cpath%20d%3D%22M5%202.5%20L5%2020.5%20L9.8%2016%20L12.9%2023%20L16.3%2021.5%20L13.2%2014.6%20L20%2014.3%20Z%22%20fill%3D%22%232563eb%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%221.4%22%20stroke-linejoin%3D%22round%22/%3E%3C/svg%3E") 4 2, pointer; }
+  input, textarea, select { cursor: text; }
+
+  /* the ring trails the pointer and swells over interactive things */
+  .cursor-ring {
+    position: fixed; top: 0; left: 0; width: 34px; height: 34px;
+    margin: -17px 0 0 -17px; border: 1.5px solid rgba(37,99,235,.55);
+    border-radius: 50%; pointer-events: none; z-index: 9999;
+    opacity: 0; transition: opacity .25s, width .25s var(--ease), height .25s var(--ease),
+                            margin .25s var(--ease), border-color .25s, background .25s;
+    will-change: transform;
+  }
+  .cursor-ring.on { opacity: 1; }
+  .cursor-ring.hot {
+    width: 56px; height: 56px; margin: -28px 0 0 -28px;
+    border-color: rgba(37,99,235,.85); background: rgba(37,99,235,.09);
+  }
+  /* on the dark bands the blue ring disappears, so invert it there */
+  .cursor-ring.dark { border-color: rgba(255,255,255,.55); }
+  .cursor-ring.dark.hot { border-color: rgba(255,255,255,.9); background: rgba(255,255,255,.12); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor-ring { display: none !important; }
 }

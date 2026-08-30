@@ -18,6 +18,36 @@
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(setNavH);
   }
 
+  /* ---------- custom cursor ring ----------
+     Fine pointers only — never on touch. The CSS arrow does the real work;
+     this is decoration that trails behind and swells over clickable things.
+     Delete this block to remove it without touching anything else. */
+  if (!reduce && window.matchMedia("(pointer: fine)").matches) {
+    var ring = document.createElement("div");
+    ring.className = "cursor-ring";
+    ring.setAttribute("aria-hidden", "true");
+    document.body.appendChild(ring);
+
+    var mx = 0, my = 0, rx = 0, ry = 0, seen = false;
+    document.addEventListener("mousemove", function (e) {
+      mx = e.clientX; my = e.clientY;
+      if (!seen) { rx = mx; ry = my; seen = true; ring.classList.add("on"); }
+      var el = e.target;
+      ring.classList.toggle("hot", !!(el.closest && el.closest("a, button, .tab, [role='tab'], label")));
+      ring.classList.toggle("dark", !!(el.closest && el.closest(".band-dark, .foot, .nav")));
+    }, { passive: true });
+
+    document.addEventListener("mouseleave", function () { ring.classList.remove("on"); });
+    document.addEventListener("mouseenter", function () { if (seen) ring.classList.add("on"); });
+
+    (function loop() {
+      rx += (mx - rx) * 0.18;
+      ry += (my - ry) * 0.18;
+      ring.style.transform = "translate3d(" + rx + "px," + ry + "px,0)";
+      requestAnimationFrame(loop);
+    })();
+  }
+
   /* ---------- mobile menu ----------
      The panel lives inside the header in normal flow, so opening it pushes
      the page down instead of covering it. The header is sticky, though, so
