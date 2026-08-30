@@ -45,7 +45,18 @@ directories starting with an underscore.
 
 Check it works before touching the domain.
 
-## Step 4 — Point shanbhag003.com at it
+## Step 4 — Point a domain at it (later)
+
+The repo has **no CNAME file and no canonical tags**, on purpose — a canonical
+pointing at a domain you don't own yet is worse than none at all. The site runs
+happily at `shanbhag003.github.io` until you buy one.
+
+When you do have a domain, tell me and I'll add the canonical tags, the OG
+URLs, a real `sitemap.xml` and the CNAME in one pass. If you go the Cloudflare
+route, Cloudflare Pages can build straight from this repo and you skip the DNS
+records below entirely.
+
+<details><summary>DNS records, for when you're ready</summary>
 
 First buy the domain if you haven't. Cloudflare Registrar sells at cost with no
 renewal markup; Namecheap and Porkbun are also fine. Avoid GoDaddy's upsells.
@@ -65,6 +76,8 @@ All four A records. GitHub uses all four for redundancy.
 Then back in **Settings → Pages → Custom domain**, enter `shanbhag003.com` and
 save. The `CNAME` file in the repo already contains this, so it should
 pre-populate.
+
+</details>
 
 Wait for the DNS check to pass — anywhere from ten minutes to a few hours — then
 tick **Enforce HTTPS**. Don't skip that; without it the site serves over plain
@@ -91,9 +104,8 @@ articles.html         five pieces, currently linking to Medium
 visualisations.html   seven Tableau dashboards
 style.css             the whole design system, one file
 app.js                scroll reveal, progress bar, project tabs
-sitemap.xml           for Google
+sitemap.xml           empty until the domain exists
 robots.txt            points at the sitemap
-CNAME                 your custom domain
 .nojekyll             stops GitHub post-processing the files
 assets/               portrait, cricket console screenshot, résumé PDF
 ```
