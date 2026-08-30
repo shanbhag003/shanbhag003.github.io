@@ -100,6 +100,11 @@ assets/               portrait, cricket console screenshot, résumé PDF
 
 ## Design decisions, so you can argue with them
 
+**Colour banding.** The page alternates grounds rather than running as one
+white sheet: a dark header, white content sections, a tinted band for the
+client marquee, and a dark feature band before the footer. The footer closes on
+the same dark as the header, so the page is bookended.
+
 **Palette** is paper-white with two accents, each carrying a fixed meaning I
 never break.
 - **Blue `#2563EB`** — action and primary. Buttons, active tabs, the scroll
@@ -120,6 +125,12 @@ a number has been checked.
   currently the default choice on modern product sites
 - **Geist Mono** for labels, tables and buttons — the vernacular of the
   operations consoles you actually build
+
+**The client marquee** drifts left to right continuously and pauses on hover.
+Each client is set in a different weight, case and tracking so the row reads as
+a set of wordmarks rather than identical chips. These are typographic
+treatments only — no real logos are used, which keeps you clear of any
+trademark question about reproducing brand marks on a personal site.
 
 **The signature element** is the bordered **rejected ledger** on the projects
 page — nobody else publishes their failed experiments, so it gets the loudest
