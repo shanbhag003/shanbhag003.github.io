@@ -18,6 +18,41 @@
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(setNavH);
   }
 
+  /* ---------- mobile menu ----------
+     The panel lives inside the header in normal flow, so opening it pushes
+     the page down instead of covering it. The header is sticky, though, so
+     if you're scrolled down it would cover content — we return to the top
+     first, which makes the push visible and means nothing is obscured. */
+  var toggle = document.getElementById("nav-toggle");
+  if (nav && toggle) {
+    var setOpen = function (open) {
+      nav.classList.toggle("open", open);
+      toggle.setAttribute("aria-expanded", open ? "true" : "false");
+      toggle.setAttribute("aria-label", open ? "Close menu" : "Open menu");
+      setNavH();
+    };
+
+    toggle.addEventListener("click", function () {
+      var opening = !nav.classList.contains("open");
+      if (opening && window.scrollY > 0) {
+        window.scrollTo({ top: 0, behavior: reduce ? "auto" : "smooth" });
+      }
+      setOpen(opening);
+    });
+
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && nav.classList.contains("open")) {
+        setOpen(false); toggle.focus();
+      }
+    });
+
+    /* leaving the mobile breakpoint must not strand the panel open */
+    var mq = window.matchMedia("(min-width: 681px)");
+    var onMQ = function (e) { if (e.matches) setOpen(false); };
+    if (mq.addEventListener) mq.addEventListener("change", onMQ);
+    else if (mq.addListener) mq.addListener(onMQ);
+  }
+
   /* ---------- scroll reveal ----------
      A tall block (three stacked claim cards on a phone) must not sit
      invisible while occupying space, so this fires the moment any part

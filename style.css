@@ -64,6 +64,23 @@ code { font-family: var(--mono); font-size: .875em; color: var(--data); }
   color: #fff; text-transform: lowercase;
 }
 .brand span { color: #5b93ff; }
+.nav-toggle {
+  display: none; appearance: none; background: none; border: 0; cursor: pointer;
+  width: 46px; height: 46px; margin-right: -10px; padding: 0;
+  align-items: center; justify-content: center;
+}
+.bars, .bars::before, .bars::after {
+  display: block; width: 24px; height: 2px; background: #fff; border-radius: 2px;
+  transition: transform .3s var(--ease), opacity .2s linear;
+}
+.bars::before, .bars::after { content: ""; position: absolute; }
+.bars::before { transform: translateY(-7px); }
+.bars::after  { transform: translateY(7px); }
+.nav-toggle { position: relative; }
+.nav.open .bars { background: transparent; }
+.nav.open .bars::before { transform: rotate(45deg); }
+.nav.open .bars::after  { transform: rotate(-45deg); }
+
 .nav ul { list-style: none; display: flex; gap: clamp(1rem, 2.6vw, 2.2rem); margin: 0; padding: 0; -webkit-overflow-scrolling: touch; }
 .nav a:not(.brand) {
   font-family: var(--body); font-size: 1.0625rem; letter-spacing: -.01em;
@@ -315,16 +332,27 @@ ul.plain li::before { content: ""; position: absolute; left: 0; top: .74em; widt
    ============================================================ */
 
 @media (max-width: 680px) {
-  .nav .wrap { flex-wrap: wrap; row-gap: 0; min-height: 0; padding-top: .8rem; }
-  .brand { flex: 1 1 auto; padding-bottom: .8rem; font-size: 1.35rem; }
+  .nav .wrap { flex-wrap: wrap; row-gap: 0; min-height: 64px; }
+  .brand { font-size: 1.35rem; }
+  .nav-toggle { display: inline-flex; }
+
+  /* the menu is part of the header, in normal flow — opening it pushes the
+     page down rather than covering what you were reading */
   .nav ul {
-    order: 3; flex: 1 0 100%; gap: 1.4rem;
-    overflow-x: auto; scrollbar-width: none;
-    margin: 0 calc(-1 * var(--gut)); padding: 0 var(--gut);
+    order: 3; flex: 1 0 100%; display: none; flex-direction: column; gap: 0;
+    margin: 0 calc(-1 * var(--gut)); padding: 0 var(--gut) .6rem;
     border-top: 1px solid #24303f;
   }
-  .nav ul::-webkit-scrollbar { display: none; }
-  .nav a:not(.brand) { padding: .85rem 0; white-space: nowrap; }
+  .nav.open ul { display: flex; }
+  .nav ul li { width: 100%; }
+  .nav a:not(.brand) {
+    font-family: var(--display); font-size: 1.4rem; font-weight: 600;
+    letter-spacing: -.03em; display: block; width: 100%;
+    padding: 1rem 0; border-bottom: 1px solid #1b2634; border-top: 0;
+  }
+  .nav ul li:last-child a { border-bottom: 0; }
+  .nav a:not(.brand):hover { border-bottom-color: #1b2634; }
+  .nav a[aria-current="page"] { color: #5b93ff; border-bottom-color: #1b2634; }
   .nav { background: var(--band-dark); }
   .subnav { background: rgba(238,242,247,.98); }
 
@@ -378,11 +406,6 @@ ul.plain li::before { content: ""; position: absolute; left: 0; top: .74em; widt
 
 /* scroll affordance on the two horizontally scrolling rows */
 @media (max-width: 680px) {
-  .nav::after {
-    content: ""; position: absolute; right: 0; bottom: 1px; width: 2.5rem; height: 44px;
-    background: linear-gradient(90deg, rgba(13,21,32,0), var(--band-dark));
-    pointer-events: none; z-index: 1;
-  }
   .subnav::after {
     content: ""; position: absolute; right: 0; bottom: 1px; width: 2.5rem;
     background: linear-gradient(90deg, rgba(238,242,247,0), rgba(238,242,247,.98));
@@ -397,21 +420,16 @@ ul.plain li::before { content: ""; position: absolute; left: 0; top: .74em; widt
   .hero { padding-top: 3rem; padding-bottom: 2.5rem; }
 }
 
-@media (max-width: 430px) {
-  .nav ul { gap: 1.1rem; }
-  .nav a:not(.brand) { font-size: .8125rem; }
-}
 @media (max-width: 380px) {
-  .nav ul { gap: .85rem; }
-  .nav a:not(.brand) { font-size: .75rem; }
   h1 { font-size: 1.8rem; }
   .btn { flex: 1 1 100%; }
+  .nav a:not(.brand) { font-size: 1.25rem; }
 }
 
 /* touch devices: tap targets and no hover artefacts, at any width */
 @media (hover: none) {
   .btn:hover, .card:hover, .claim:hover { transform: none; box-shadow: none; }
-  .nav a:not(.brand) { padding: .95rem 0; }
+
   .foot-links { gap: 0; }
   .foot-links a { min-height: 44px; display: flex; align-items: center; }
   .claim a, .card .go { padding: .35rem 0; }
