@@ -100,31 +100,30 @@ assets/               portrait, cricket console screenshot, résumé PDF
 
 ## Design decisions, so you can argue with them
 
-**Palette** is a broadcast scoreboard: deep navy ink (`#0A0E14`) with two
-accents, each with a fixed meaning I never break.
-- **Signal blue `#3D8BFF`** — action, on air, primary. The pulsing dot, primary
-  buttons, active tabs, the scroll progress bar, and the "rejected" ledgers.
-- **Amber `#FFB020`** — measured, validated, numeric. Winning rows in tables,
+**Palette** is paper-white with two accents, each carrying a fixed meaning I
+never break.
+- **Blue `#2563EB`** — action and primary. Buttons, active tabs, the scroll
+  progress line, and the border on the "rejected" ledgers.
+- **Ochre `#B45309`** — measured, validated, numeric. Winning rows in tables,
   client attributions, verified claims.
 
-Blue and amber is the native palette of every scoreboard and every operations
-console, which is the world the work comes from.
+Every text-on-background pair used anywhere on the site was contrast-checked;
+the lowest is 4.77:1 against a WCAG AA floor of 4.5:1.
 
 That mapping encodes something true rather than decorating. When you see mint,
 a number has been checked.
 
 **Type** is three faces doing three jobs:
-- **Sora** for headings — a geometric sans used across fintech and data
-  products, deliberately not Inter, which every developer portfolio uses
-- **Source Serif 4** for body prose — a serif, because your case studies are
-  long and because it signals that you write
-- **JetBrains Mono** for labels, timestamps, tables and the status strip — the
-  vernacular of the operations consoles you actually build
+- **Instrument Sans** for headings — a tight contemporary grotesque, not Inter,
+  which every developer portfolio uses
+- **Geist** for body text — Vercel's typeface, designed for screen reading and
+  currently the default choice on modern product sites
+- **Geist Mono** for labels, tables and buttons — the vernacular of the
+  operations consoles you actually build
 
-**The signature elements** are the tally strip across the top of every page (a
-broadcast on-air light, in your own console's language) and the bordered
-**rejected ledgers** on the projects page. The ledgers are the thing nobody else
-has, so they get the loudest treatment on the site.
+**The signature element** is the bordered **rejected ledger** on the projects
+page — nobody else publishes their failed experiments, so it gets the loudest
+treatment on the site.
 
 **Mobile.** Tested by rendering every page at 430, 390, 360 and 320px. No
 horizontal scroll anywhere. The sticky header becomes two rows on narrow
@@ -134,8 +133,7 @@ so the tab bar can never end up hidden behind the header. All five nav links
 fit without scrolling down to 360px; below that the row scrolls with a fade on
 the right edge. Wide data tables scroll horizontally inside their own container,
 also with an edge fade, so it's obvious there's more to see. Every tap target
-clears 44px, hover lifts are disabled on touch devices, and the tally strip
-drops its third item on phones so it stays on one line.
+clears 44px, hover lifts are disabled on touch devices, and buttons go full width so they never orphan.
 
 **Accessibility floor:** responsive to 320px, visible keyboard focus rings,
 `prefers-reduced-motion` respected, skip link, semantic headings, real alt text,
