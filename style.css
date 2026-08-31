@@ -124,7 +124,11 @@ section + section { border-top: 1px solid var(--line); }
 .band-gold { background: var(--gold); color: var(--paper); border-top: 0; }
 .band-gold h2, .band-gold strong { color: var(--paper); }
 .band-gold p { color: rgba(11,11,12,.8); }
-.band-gold .eyebrow { color: rgba(11,11,12,.6); }
+.band-gold .eyebrow { color: rgba(11,11,12,.62); }
+.band-gold .btn { background: transparent; border-color: rgba(11,11,12,.4); color: var(--paper); }
+.band-gold .btn:hover { background: #fff; border-color: #fff; color: var(--paper); }
+.band-gold .btn-live { background: var(--paper); border-color: var(--paper); color: var(--gold); }
+.band-gold .btn-live:hover { background: #fff; border-color: #fff; color: var(--paper); }
 .band-white { background: #fff; border-top: 0; }
 section.band-tint + section, section.band-warm + section, section.band-gold + section,
 section.band-white + section, section.band-dark + section { border-top: 0; }
@@ -169,7 +173,8 @@ section.band-dark + section { border-top: 0; }
 .btn-live { background: var(--paper); border-color: var(--paper); color: #fff; font-weight: 500; box-shadow: none; }
 .band-dark .btn, .foot .btn { background: transparent; color: #fff; border-color: #3a3a3d; }
 .band-dark .btn:hover, .foot .btn:hover { border-color: #fff; box-shadow: none; }
-.band-dark .btn-live, .foot .btn-live { background: var(--live); border-color: var(--live); color: #fff; }
+.band-dark .btn-live, .foot .btn-live { background: var(--gold); border-color: var(--gold); color: var(--paper); font-weight: 600; }
+.band-dark .btn-live:hover, .foot .btn-live:hover { background: #fff; border-color: #fff; color: var(--paper); }
 .btn-live:hover { background: var(--gold); border-color: var(--gold); color: var(--paper); box-shadow: none; }
 
 /* ---------- claim cards ---------- */
@@ -544,7 +549,7 @@ ul.plain li::before { content: ""; position: absolute; left: 0; top: .74em; widt
 
 .stats { display: block; }
 .stat {
-  display: grid; grid-template-columns: 9rem 1fr; gap: clamp(1.5rem, 4vw, 4rem);
+  display: grid; grid-template-columns: 9rem 1fr; column-gap: clamp(1.5rem, 4vw, 4rem); row-gap: 0;
   align-items: start; border-top: 1px solid #2a2a2c; padding: 2rem 0;
 }
 .stat:first-child { border-top: 1px solid var(--gold); }
@@ -558,7 +563,7 @@ ul.plain li::before { content: ""; position: absolute; left: 0; top: .74em; widt
 .stat p { grid-column: 2; grid-row: 2; font-size: .9375rem; color: #a9a59e; margin: 0; max-width: 62ch; }
 
 @media (max-width: 620px) {
-  .stat { grid-template-columns: 1fr; gap: .35rem; padding: 1.5rem 0; }
+  .stat { grid-template-columns: 1fr; column-gap: 0; row-gap: .3rem; padding: 1.5rem 0; }
   .stat-n, .stat h3, .stat p { grid-column: 1; grid-row: auto; }
   .stat-n { font-size: 3rem; }
   .stat h3 { font-size: 1.15rem; }
