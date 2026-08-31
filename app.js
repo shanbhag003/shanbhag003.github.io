@@ -18,6 +18,34 @@
     if (document.fonts && document.fonts.ready) document.fonts.ready.then(setNavH);
   }
 
+  /* ---------- stat count-up ----------
+     The final value is already in the HTML, so it reads correctly with
+     JavaScript off, for a crawler, or under reduced-motion. */
+  var stats = document.querySelectorAll(".stat-n");
+  if (stats.length && !reduce && "IntersectionObserver" in window) {
+    var countUp = function (el) {
+      var to = parseInt(el.getAttribute("data-to"), 10);
+      var suffix = el.getAttribute("data-suffix") || "";
+      if (isNaN(to)) return;
+      var start = null, dur = 1400;
+      var step = function (ts) {
+        if (start === null) start = ts;
+        var t = Math.min((ts - start) / dur, 1);
+        var eased = 1 - Math.pow(1 - t, 3);
+        el.textContent = Math.round(to * eased) + (t === 1 ? suffix : "");
+        if (t < 1) requestAnimationFrame(step);
+      };
+      el.textContent = "0";
+      requestAnimationFrame(step);
+    };
+    var sio = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { countUp(e.target); sio.unobserve(e.target); }
+      });
+    }, { threshold: 0.4 });
+    Array.prototype.forEach.call(stats, function (el) { sio.observe(el); });
+  }
+
   /* ---------- custom cursor ring ----------
      Fine pointers only — never on touch. The CSS arrow does the real work;
      this is decoration that trails behind and swells over clickable things.
