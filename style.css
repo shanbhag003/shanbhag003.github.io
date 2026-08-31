@@ -648,3 +648,13 @@ ul.plain li::before { content: ""; position: absolute; left: 0; top: .74em; widt
   .cursor-ring { display: none !important; }
 }
 
+
+/* Footer social links.
+   The brand marks stay monochrome white — every one of these companies
+   permits their mark in official colour, solid black or solid white, and
+   nothing else. Only the text label takes the gold hover, so the marks
+   themselves are never recoloured. */
+.foot-links a { display: inline-flex; align-items: center; gap: .6rem; }
+.foot-links .ico { flex: 0 0 auto; color: #fff; opacity: .7; transition: opacity .18s; }
+.foot-links a:hover .ico { opacity: 1; }
+.foot-links a:hover { color: var(--gold); }
