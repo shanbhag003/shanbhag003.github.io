@@ -801,3 +801,35 @@ ul.plain li::before { content: ""; position: absolute; left: 0; top: .74em; widt
 @media (prefers-reduced-motion: reduce) {
   .cursor-ring { display: none !important; }
 }
+
+/* ---------- name / skill tags ----------
+   Subtle fills, no outlines. Outlined pills read as 2018; a soft
+   fill is how current interfaces label things.
+   ------------------------------------------------------------ */
+
+.tags { display: flex; flex-wrap: wrap; gap: .35rem; margin: 1.1rem 0 0; padding: 0; list-style: none; }
+.tags li {
+  font-family: var(--mono); font-size: .75rem; letter-spacing: .01em;
+  background: var(--ink-3); color: #34322c; padding: .38rem .65rem; border-radius: 6px;
+}
+.band-dark .tags li { background: #1c1c22; color: #c8c4bc; }
+.tags.gold li { background: rgba(138,109,16,.12); color: var(--gold-deep); }
+
+/* ---------- awards ---------- */
+.awards { list-style: none; margin: 0; padding: 0; }
+.awards li {
+  display: grid; grid-template-columns: 5rem 1fr; gap: 1.25rem; align-items: baseline;
+  padding: .85rem 0; border-bottom: 1px solid var(--line);
+}
+.awards li:first-child { border-top: 1px solid var(--line); }
+.awards .yr { font-family: var(--mono); font-size: .8125rem; color: var(--gold-deep); }
+.awards .aw { font-size: 1rem; font-weight: 500; }
+@media (max-width: 520px) { .awards li { grid-template-columns: 1fr; gap: .15rem; } }
+
+/* ---------- capability rows ---------- */
+.cap { display: grid; grid-template-columns: 16rem 1fr; gap: clamp(1rem, 3vw, 3.5rem); padding: 2.25rem 0; border-top: 1px solid var(--line); }
+.cap h3 { font-size: clamp(1.2rem, 2vw, 1.5rem); letter-spacing: -.025em; margin-bottom: .3rem; }
+.cap .cap-kind { font-family: var(--mono); font-size: .6875rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted-2); margin: 0; }
+.cap > div > p { margin-bottom: .7rem; }
+.cap > div > p:last-of-type { margin-bottom: 0; }
+@media (max-width: 780px) { .cap { grid-template-columns: 1fr; gap: .8rem; } }
