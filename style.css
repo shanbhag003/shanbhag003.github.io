@@ -833,3 +833,57 @@ ul.plain li::before { content: ""; position: absolute; left: 0; top: .74em; widt
 .cap > div > p { margin-bottom: .7rem; }
 .cap > div > p:last-of-type { margin-bottom: 0; }
 @media (max-width: 780px) { .cap { grid-template-columns: 1fr; gap: .8rem; } }
+
+/* ============================================================
+   CAPABILITY PANELS (experience)
+   Four substantial panels rather than plain rows, with a large
+   gold ordinal and a lift on hover.
+   ============================================================ */
+
+.caps { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; }
+@media (max-width: 900px) { .caps { grid-template-columns: 1fr; } }
+
+.capx {
+  background: #fff; border: 1px solid var(--line); border-radius: 16px;
+  padding: clamp(1.5rem, 2.6vw, 2.1rem); display: flex; flex-direction: column;
+  transition: border-color .22s, transform .3s var(--ease), box-shadow .3s var(--ease);
+}
+.capx:hover { border-color: var(--paper); transform: translateY(-4px); box-shadow: 0 16px 34px rgba(11,11,12,.09); }
+.capx-n {
+  font-family: var(--mono); font-size: .8125rem; color: var(--gold-deep);
+  display: block; margin-bottom: .8rem;
+}
+.capx h3 { font-size: clamp(1.3rem, 2.1vw, 1.65rem); letter-spacing: -.03em; margin-bottom: 1.1rem; }
+.capx ul.lines { list-style: none; margin: 0; padding: 0; }
+.capx ul.lines li {
+  font-size: .9375rem; color: var(--muted); line-height: 1.5;
+  padding: .6rem 0; border-top: 1px solid var(--line);
+}
+.capx ul.lines li b { color: var(--paper); font-weight: 600; }
+.capx .tags { margin-top: 1.35rem; }
+@media (hover: none) { .capx:hover { transform: none; box-shadow: none; border-color: var(--line); } }
+
+/* ============================================================
+   CLIENT WALL
+   Every client set the way that brand sets its own name —
+   typographic treatment only, never a reproduced logo.
+   ============================================================ */
+
+.cwall { display: grid; grid-template-columns: repeat(auto-fill, minmax(11rem, 1fr)); gap: 0; }
+.cwall li {
+  list-style: none; border-top: 1px solid var(--line);
+  padding: 1.05rem .5rem 1.05rem 0; color: #2a2823; line-height: 1.1;
+  transition: color .2s;
+}
+.cwall li:hover { color: var(--gold-deep); }
+.cl-a { font-family: var(--display); font-weight: 700; font-size: 1.35rem; letter-spacing: -.045em; }
+.cl-b { font-family: var(--mono); font-weight: 500; font-size: .95rem; letter-spacing: .16em; text-transform: uppercase; }
+.cl-c { font-family: var(--display); font-weight: 600; font-size: 1.2rem; letter-spacing: .02em; text-transform: uppercase; }
+.cl-d { font-family: var(--body); font-weight: 500; font-size: 1.25rem; letter-spacing: -.02em; }
+.cl-e { font-family: var(--display); font-weight: 400; font-size: 1.3rem; font-style: italic; letter-spacing: -.01em; }
+.cl-f { font-family: var(--mono); font-weight: 400; font-size: 1rem; letter-spacing: .03em; }
+@media (max-width: 620px) {
+  .cwall { grid-template-columns: 1fr 1fr; }
+  .cl-a { font-size: 1.05rem } .cl-b { font-size: .8rem } .cl-c { font-size: .95rem }
+  .cl-d { font-size: 1rem } .cl-e { font-size: 1.05rem } .cl-f { font-size: .85rem }
+}
