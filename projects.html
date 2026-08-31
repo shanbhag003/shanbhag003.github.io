@@ -48,9 +48,12 @@
 
 <nav class="prail" aria-label="Projects">
   <div class="wrap">
-    <a href="#pl-supercomputer">PL Supercomputer</a>
-    <a href="#cricket-digest">Cricket AI Digest</a>
-    <a href="#fpl">FPL Auto Manager</a>
+    <div class="prail-track">
+      <span class="prail-ind" aria-hidden="true"></span>
+      <a href="#pl-supercomputer" aria-current="true">PL Supercomputer</a>
+      <a href="#cricket-digest">Cricket AI Digest</a>
+      <a href="#fpl">FPL Auto Manager</a>
+    </div>
   </div>
 </nav>
 
@@ -76,13 +79,15 @@
         <div class="metric"><span class="mval">7 / 7</span><span class="mlab">Backtested seasons with the champion in the top three</span><span class="mnote">Walk-forward, never seeing a result first</span></div>
       </div>
 
-      <div class="ledger reveal">
+      <div class="rejected reveal">
         <p class="eyebrow">Switched off, and still in the repository</p>
-        <div class="chips">
-          <span>Market odds blend</span><span>Manager effects, all changes</span>
-          <span>Foreign-league manager values</span><span>Fixture congestion</span>
-        </div>
-        <p>Version one penalised Liverpool for hiring Slot, who then won the league — it couldn't tell "worse manager" from "manager we've never seen". It ships only where both managers have a Premier League record. Congestion was the one I most wanted to be true: two datasets, seven seasons, net effect +0.00002.</p>
+        <ul class="rej-list">
+          <li><s>Market odds blend</s><span>Marginal error gain, worse ranking and calibration</span></li>
+          <li><s>Manager effects, all changes</s><span>Worse on every metric</span></li>
+          <li><s>Foreign-league manager values</s><span>Player conversion already weak at n&asymp;200</span></li>
+          <li><s>Fixture congestion</s><span>Effect reverses sign between eras, fails out-of-sample</span></li>
+        </ul>
+        <p>Version one penalised Liverpool for hiring Slot, who then won the league — it couldn't tell "worse manager" from "manager we have never seen". It ships only where both managers have a Premier League record. Congestion was the one I most wanted to be true: two datasets, seven seasons, net effect +0.00002.</p>
       </div>
 
       <div class="actions reveal">
@@ -115,7 +120,7 @@
         <div class="metric"><span class="mval">3</span><span class="mlab">Formats with their own thresholds</span><span class="mnote">50 runs is an hour in a Test, five overs in a T20</span></div>
       </div>
 
-      <div class="ledger reveal">
+      <div class="note reveal">
         <p class="eyebrow">What I got wrong</p>
         <p>Two traps in ESPN's schema, both caught by reading the raw payload rather than trusting the field names. A team that hasn't batted can appear as <code>0/0 (73 ov)</code>, because bowling overs are mirrored into the wrong side's linescore. <strong>A digest built from all-null fields still looks like a success in the logs</strong> — so a debug endpoint returns the exact object handed to the model.</p>
       </div>
@@ -151,7 +156,7 @@
         <div class="metric"><span class="mval">Down<br>only</span><span class="mlab">What the language model may do to a projection</span><span class="mnote">A wrong call costs one player, not the team</span></div>
       </div>
 
-      <div class="ledger reveal">
+      <div class="note reveal">
         <p class="eyebrow">The mistake that rebuilt the model</p>
         <p>The first version ranked players on FPL's own projection field. Before a season it's a placeholder — about 24 distinct values across 570 players — so a backup goalkeeper and the best striker scored identically. It sold three of the squad's best players and bought a forward who had started three games all season.</p>
         <p class="quote">The code ran perfectly. The thinking was wrong.</p>

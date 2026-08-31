@@ -161,9 +161,18 @@
       if (el) cases.push({ link: a, el: el });
     });
     if (cases.length) {
+      var track = rail.querySelector(".prail-track");
+      var ind = rail.querySelector(".prail-ind");
+      if (track && ind) track.classList.add("js");
+
+      var slide = function (link) {
+        if (!ind || !track) return;
+        ind.style.width = link.offsetWidth + "px";
+        ind.style.transform = "translateX(" + (link.offsetLeft - 5) + "px)";
+      };
       var mark = function (id) {
         cases.forEach(function (c) {
-          if (c.el.id === id) c.link.setAttribute("aria-current", "true");
+          if (c.el.id === id) { c.link.setAttribute("aria-current", "true"); slide(c.link); }
           else c.link.removeAttribute("aria-current");
         });
       };
@@ -176,6 +185,16 @@
       }, { rootMargin: "-30% 0px -55% 0px", threshold: [0, 0.25, 0.5, 1] });
       cases.forEach(function (c) { rio.observe(c.el); });
       mark(cases[0].el.id);
+      window.addEventListener("resize", function () {
+        var cur = rail.querySelector('a[aria-current="true"]');
+        if (cur) slide(cur);
+      });
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(function () {
+          var cur = rail.querySelector('a[aria-current="true"]');
+          if (cur) slide(cur);
+        });
+      }
     }
   }
 

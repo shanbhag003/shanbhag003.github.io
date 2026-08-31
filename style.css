@@ -240,18 +240,49 @@ section.band-dark + section { border-top: 0; }
 }
 .clients li:hover { border-color: var(--paper); color: #000; box-shadow: none; }
 
-/* ---------- project rail (sticky pill nav) ---------- */
+/* ---------- project rail ----------
+   A segmented control, not a row of outline pills. The active
+   state is a solid pill that slides between items; the CSS
+   fallback below keeps it visible with JavaScript off.
+   ------------------------------------------------------------ */
 
-.prail { position: sticky; top: var(--nav-h); z-index: 30; background: rgba(247,246,243,.94); backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); }
-.prail .wrap { display: flex; gap: .5rem; overflow-x: auto; scrollbar-width: none; padding-top: .7rem; padding-bottom: .7rem; }
-.prail .wrap::-webkit-scrollbar { display: none; }
-.prail a {
-  font-family: var(--mono); font-size: .8125rem; text-decoration: none; white-space: nowrap;
-  color: var(--muted); padding: .5rem .95rem; border: 1px solid var(--line);
-  border-radius: 999px; transition: color .18s, border-color .18s, background .18s;
+.prail {
+  position: sticky; top: var(--nav-h); z-index: 30;
+  background: rgba(247,246,243,.94); backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--line);
 }
-.prail a:hover { color: var(--paper); border-color: var(--line-2); }
-.prail a[aria-current="true"] { background: var(--paper); border-color: var(--paper); color: #fff; }
+.prail .wrap { padding-top: .85rem; padding-bottom: .85rem; overflow-x: auto; scrollbar-width: none; }
+.prail .wrap::-webkit-scrollbar { display: none; }
+
+.prail-track {
+  position: relative; display: inline-flex; gap: .25rem;
+  background: var(--ink-3); border-radius: 999px; padding: 5px;
+  width: max-content;
+}
+.prail-ind {
+  position: absolute; top: 5px; left: 0; height: calc(100% - 10px);
+  background: var(--paper); border-radius: 999px; opacity: 0;
+  transition: transform .38s var(--ease), width .38s var(--ease), opacity .2s;
+  pointer-events: none;
+}
+.prail-track.js .prail-ind { opacity: 1; }
+
+.prail a {
+  position: relative; z-index: 1;
+  font-family: var(--body); font-size: .9375rem; font-weight: 500; letter-spacing: -.01em;
+  text-decoration: none; white-space: nowrap; color: var(--muted);
+  padding: .72rem 1.35rem; border-radius: 999px; transition: color .22s;
+}
+.prail a:hover { color: var(--paper); }
+.prail a[aria-current="true"] { color: #fff; }
+
+/* fallback: without the sliding indicator, fill the active item directly */
+.prail-track:not(.js) a[aria-current="true"] { background: var(--paper); }
+
+@media (max-width: 620px) {
+  .prail .wrap { padding-top: .6rem; padding-bottom: .6rem; }
+  .prail a { font-size: .875rem; padding: .65rem 1.05rem; }
+}
 
 /* ---------- case blocks ---------- */
 
@@ -282,24 +313,50 @@ section.band-dark + section { border-top: 0; }
 .stackline { font-family: var(--mono); font-size: .75rem; letter-spacing: .09em; text-transform: uppercase; color: var(--muted-2); margin-bottom: 1.5rem; }
 .footnote { font-size: .875rem; color: var(--muted-2); margin-top: 1.25rem; max-width: 54ch; }
 
-/* ---------- metric cards (replaces the data tables) ---------- */
+/* ---------- metrics ----------
+   No boxes. A hairline above each figure and nothing else — the
+   bordered grid was a table in disguise.
+   ------------------------------------------------------------ */
 
-.metrics { display: flex; flex-wrap: wrap; gap: 1px; background: var(--line); border: 1px solid var(--line); margin: 2rem 0 2.25rem; }
-.metric { flex: 1 1 min(14rem, 100%); }
-.metric { background: #fff; padding: 1.25rem 1.35rem 1.4rem; display: flex; flex-direction: column; }
-.band-tint .metric { background: #fff; }
-.mval { font-family: var(--display); font-weight: 700; font-size: clamp(1.9rem, 3.2vw, 2.5rem); letter-spacing: -.04em; line-height: 1; color: var(--paper); margin-bottom: .6rem; }
-.mlab { font-size: .875rem; font-weight: 500; color: var(--paper); line-height: 1.35; margin-bottom: .4rem; }
-.mnote { font-family: var(--mono); font-size: .6875rem; color: var(--muted-2); line-height: 1.5; margin-top: auto; }
-
-/* ---------- rejected chips ---------- */
-
-.chips { display: flex; flex-wrap: wrap; gap: .4rem; margin: 0 0 1.1rem; }
-.chips span {
-  font-family: var(--mono); font-size: .6875rem; letter-spacing: .04em;
-  border: 1px solid var(--paper); border-radius: 999px; padding: .35rem .7rem;
-  color: var(--paper); background: rgba(11,11,12,.04);
+.metrics {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(10.5rem, 1fr));
+  column-gap: clamp(1.5rem, 3vw, 2.75rem); row-gap: 0;
+  margin: 2.5rem 0 2.75rem;
 }
+.metric { display: flex; flex-direction: column; border-top: 1.5px solid var(--paper); padding: 1rem 0 1.6rem; }
+.mval {
+  font-family: var(--display); font-weight: 700;
+  font-size: clamp(2.3rem, 3.8vw, 3.1rem); letter-spacing: -.045em; line-height: .95;
+  color: var(--paper); margin-bottom: .7rem; font-variant-numeric: tabular-nums;
+}
+.mlab { font-size: .9375rem; font-weight: 500; color: var(--paper); line-height: 1.35; margin-bottom: .45rem; }
+.mnote { font-family: var(--mono); font-size: .6875rem; color: var(--muted-2); line-height: 1.55; margin-top: auto; }
+
+/* ---------- the rejected ledger ----------
+   Each item struck through, with the reason beside it. No fill,
+   no border box — a gold rule and hairline rows.
+   ------------------------------------------------------------ */
+
+.rejected { border-top: 1.5px solid var(--gold-deep); padding-top: 1.1rem; margin: 2.5rem 0; }
+.rejected > .eyebrow { color: var(--gold-deep); margin-bottom: 1rem; }
+.rej-list { list-style: none; margin: 0 0 1.4rem; padding: 0; }
+.rej-list li {
+  display: grid; grid-template-columns: minmax(9rem, 15rem) 1fr; gap: 1.25rem;
+  padding: .8rem 0; border-bottom: 1px solid var(--line); align-items: baseline;
+}
+@media (max-width: 620px) { .rej-list li { grid-template-columns: 1fr; gap: .2rem; } }
+.rej-list s {
+  font-family: var(--mono); font-size: .8125rem; color: var(--muted-2);
+  text-decoration-thickness: 1.5px; text-decoration-color: var(--gold-deep);
+}
+.rej-list span { font-size: .9375rem; color: var(--muted); }
+.rejected > p { font-size: .9375rem; }
+.rejected > p:last-child { margin-bottom: 0; }
+
+/* ---------- an honest note, no box ---------- */
+.note { border-left: 2px solid var(--gold-deep); padding: .1rem 0 .1rem 1.35rem; margin: 2.5rem 0; }
+.note > .eyebrow { color: var(--gold-deep); }
+.note p:last-child { margin-bottom: 0; }
 
 .field { margin: 2.5rem 0; }
 .field > .eyebrow { margin-bottom: .6rem; }
