@@ -240,31 +240,66 @@ section.band-dark + section { border-top: 0; }
 }
 .clients li:hover { border-color: var(--paper); color: #000; box-shadow: none; }
 
-/* ---------- project sub-nav + panels ---------- */
+/* ---------- project rail (sticky pill nav) ---------- */
 
-.subnav { position: sticky; top: var(--nav-h); z-index: 30; background: rgba(239,236,229,.97); backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); }
-.subnav .wrap { display: flex; gap: 0; overflow-x: auto; scrollbar-width: none; }
-.subnav .wrap::-webkit-scrollbar { display: none; }
-.tab {
-  appearance: none; background: none; border: 0; border-bottom: 2px solid transparent;
-  color: var(--muted); font-family: var(--mono); font-size: .875rem;
-  padding: 1.05rem 1.15rem; cursor: pointer; white-space: nowrap;
-  display: flex; align-items: baseline; gap: .55rem; transition: color .18s, border-color .18s;
+.prail { position: sticky; top: var(--nav-h); z-index: 30; background: rgba(247,246,243,.94); backdrop-filter: blur(14px); border-bottom: 1px solid var(--line); }
+.prail .wrap { display: flex; gap: .5rem; overflow-x: auto; scrollbar-width: none; padding-top: .7rem; padding-bottom: .7rem; }
+.prail .wrap::-webkit-scrollbar { display: none; }
+.prail a {
+  font-family: var(--mono); font-size: .8125rem; text-decoration: none; white-space: nowrap;
+  color: var(--muted); padding: .5rem .95rem; border: 1px solid var(--line);
+  border-radius: 999px; transition: color .18s, border-color .18s, background .18s;
 }
-.tab:first-child { padding-left: 0; }
-.tab .n { color: var(--line-2); font-size: .75rem; }
-.tab:hover { color: var(--paper); }
-.tab[aria-selected="true"] { color: var(--paper); font-weight: 500; border-bottom-color: var(--live); }
-.tab[aria-selected="true"] .n { color: var(--live); }
+.prail a:hover { color: var(--paper); border-color: var(--line-2); }
+.prail a[aria-current="true"] { background: var(--paper); border-color: var(--paper); color: #fff; }
 
-.panel { animation: panelIn .45s var(--ease) both; }
-.panel[hidden] { display: none; }
-@keyframes panelIn { from { opacity: 0; transform: translateY(14px) } to { opacity: 1; transform: none } }
+/* ---------- case blocks ---------- */
 
-.proj { scroll-margin-top: calc(var(--nav-h) + 4rem); }
-.proj-head { display: flex; align-items: baseline; gap: 1rem; flex-wrap: wrap; margin-bottom: .35rem; }
-.proj-index { font-family: var(--mono); font-size: .875rem; color: var(--live); }
-.proj-tag { font-family: var(--mono); font-size: .75rem; text-transform: uppercase; letter-spacing: .06em; color: var(--muted-2); margin-bottom: 1.6rem; }
+.case { padding: clamp(3.5rem, 7vw, 6rem) 0; scroll-margin-top: calc(var(--nav-h) + 4.5rem); }
+.case-grid { display: grid; grid-template-columns: 0.85fr 1.15fr; gap: clamp(2rem, 5vw, 4.5rem); align-items: start; }
+.case.flip .case-grid { grid-template-columns: 1.15fr 0.85fr; }
+.case.flip .case-media { order: 2; }
+@media (max-width: 900px) {
+  .case-grid, .case.flip .case-grid { grid-template-columns: 1fr; }
+  .case.flip .case-media { order: 0; }
+}
+
+.case-media { position: sticky; top: calc(var(--nav-h) + 5rem); }
+@media (max-width: 900px) { .case-media { position: static; } }
+
+.screen { display: block; border: 1px solid #26262e; border-radius: 14px; overflow: hidden; background: #14141a; }
+.screen-bar {
+  display: flex; align-items: center; gap: .5rem; padding: .7rem .9rem;
+  font-family: var(--mono); font-size: .6875rem; color: #8b8780;
+  border-bottom: 1px solid #26262e; background: #0e0e12; white-space: nowrap; overflow: hidden;
+}
+.screen-bar span { overflow: hidden; text-overflow: ellipsis; }
+.screen-bar .live-dot { flex: 0 0 auto; width: 6px; height: 6px; border-radius: 50%; background: #4ade80; animation: pulse 2.8s var(--ease) infinite; }
+.screen-img { display: block; aspect-ratio: 4 / 5; background: #08080b; }
+.screen-img img { width: 100%; height: 100%; object-fit: contain; }
+
+.case-body > h2 { font-size: clamp(2.1rem, 4.4vw, 3.4rem); letter-spacing: -.04em; line-height: 1.02; margin-bottom: .9rem; }
+.stackline { font-family: var(--mono); font-size: .75rem; letter-spacing: .09em; text-transform: uppercase; color: var(--muted-2); margin-bottom: 1.5rem; }
+.footnote { font-size: .875rem; color: var(--muted-2); margin-top: 1.25rem; max-width: 54ch; }
+
+/* ---------- metric cards (replaces the data tables) ---------- */
+
+.metrics { display: flex; flex-wrap: wrap; gap: 1px; background: var(--line); border: 1px solid var(--line); margin: 2rem 0 2.25rem; }
+.metric { flex: 1 1 min(14rem, 100%); }
+.metric { background: #fff; padding: 1.25rem 1.35rem 1.4rem; display: flex; flex-direction: column; }
+.band-tint .metric { background: #fff; }
+.mval { font-family: var(--display); font-weight: 700; font-size: clamp(1.9rem, 3.2vw, 2.5rem); letter-spacing: -.04em; line-height: 1; color: var(--paper); margin-bottom: .6rem; }
+.mlab { font-size: .875rem; font-weight: 500; color: var(--paper); line-height: 1.35; margin-bottom: .4rem; }
+.mnote { font-family: var(--mono); font-size: .6875rem; color: var(--muted-2); line-height: 1.5; margin-top: auto; }
+
+/* ---------- rejected chips ---------- */
+
+.chips { display: flex; flex-wrap: wrap; gap: .4rem; margin: 0 0 1.1rem; }
+.chips span {
+  font-family: var(--mono); font-size: .6875rem; letter-spacing: .04em;
+  border: 1px solid var(--paper); border-radius: 999px; padding: .35rem .7rem;
+  color: var(--paper); background: rgba(11,11,12,.04);
+}
 
 .field { margin: 2.5rem 0; }
 .field > .eyebrow { margin-bottom: .6rem; }
@@ -409,8 +444,6 @@ ul.plain li::before { content: ""; position: absolute; left: 0; top: .74em; widt
          display: inline-flex; align-items: center; justify-content: center; font-size: 1rem; }
   .btn:hover { transform: none; box-shadow: none; }
   .btn::after { margin-left: .15rem; }
-  .tab { padding: 1rem .85rem; min-height: 48px; }
-  .tab .n { display: none; }
   .proj-index { display: none; }
   .proj-head { gap: 0; }
 
@@ -525,40 +558,6 @@ ul.plain li::before { content: ""; position: absolute; left: 0; top: .74em; widt
 }
 
 
-/* ============================================================
-   CUSTOM CURSOR
-   Fine-pointer devices only. A navy arrow by default, the same
-   arrow in blue over anything clickable — the state change is
-   the whole point, otherwise links stop feeling clickable.
-   ============================================================ */
-
-@media (pointer: fine) {
-  body { cursor: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2226%22%20height%3D%2226%22%20viewBox%3D%220%200%2026%2026%22%3E%3Cpath%20d%3D%22M5%202.5%20L5%2020.5%20L9.8%2016%20L12.9%2023%20L16.3%2021.5%20L13.2%2014.6%20L20%2014.3%20Z%22%20fill%3D%22%230d1117%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%221.4%22%20stroke-linejoin%3D%22round%22/%3E%3C/svg%3E") 4 2, auto; }
-  a, button, .tab, summary, [role="tab"], label { cursor: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2226%22%20height%3D%2226%22%20viewBox%3D%220%200%2026%2026%22%3E%3Cpath%20d%3D%22M5%202.5%20L5%2020.5%20L9.8%2016%20L12.9%2023%20L16.3%2021.5%20L13.2%2014.6%20L20%2014.3%20Z%22%20fill%3D%22%232563eb%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%221.4%22%20stroke-linejoin%3D%22round%22/%3E%3C/svg%3E") 4 2, pointer; }
-  input, textarea, select { cursor: text; }
-
-  /* the ring trails the pointer and swells over interactive things */
-  .cursor-ring {
-    position: fixed; top: 0; left: 0; width: 34px; height: 34px;
-    margin: -17px 0 0 -17px; border: 1.5px solid rgba(11,11,12,.5);
-    border-radius: 50%; pointer-events: none; z-index: 9999;
-    opacity: 0; transition: opacity .25s, width .25s var(--ease), height .25s var(--ease),
-                            margin .25s var(--ease), border-color .25s, background .25s;
-    will-change: transform;
-  }
-  .cursor-ring.on { opacity: 1; }
-  .cursor-ring.hot {
-    width: 56px; height: 56px; margin: -28px 0 0 -28px;
-    border-color: var(--paper); background: rgba(236,208,111,.28);
-  }
-  /* on the dark bands the blue ring disappears, so invert it there */
-  .cursor-ring.dark { border-color: rgba(236,208,111,.65); }
-  .cursor-ring.dark.hot { border-color: var(--gold); background: rgba(236,208,111,.2); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .cursor-ring { display: none !important; }
-}
 
 /* ============================================================
    WORK NUMBERS
@@ -632,40 +631,6 @@ ul.plain li::before { content: ""; position: absolute; left: 0; top: .74em; widt
 }
 
 
-/* ============================================================
-   CUSTOM CURSOR
-   Fine-pointer devices only. A navy arrow by default, the same
-   arrow in blue over anything clickable — the state change is
-   the whole point, otherwise links stop feeling clickable.
-   ============================================================ */
-
-@media (pointer: fine) {
-  body { cursor: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2226%22%20height%3D%2226%22%20viewBox%3D%220%200%2026%2026%22%3E%3Cpath%20d%3D%22M5%202.5%20L5%2020.5%20L9.8%2016%20L12.9%2023%20L16.3%2021.5%20L13.2%2014.6%20L20%2014.3%20Z%22%20fill%3D%22%230d1117%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%221.4%22%20stroke-linejoin%3D%22round%22/%3E%3C/svg%3E") 4 2, auto; }
-  a, button, .tab, summary, [role="tab"], label { cursor: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2226%22%20height%3D%2226%22%20viewBox%3D%220%200%2026%2026%22%3E%3Cpath%20d%3D%22M5%202.5%20L5%2020.5%20L9.8%2016%20L12.9%2023%20L16.3%2021.5%20L13.2%2014.6%20L20%2014.3%20Z%22%20fill%3D%22%232563eb%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%221.4%22%20stroke-linejoin%3D%22round%22/%3E%3C/svg%3E") 4 2, pointer; }
-  input, textarea, select { cursor: text; }
-
-  /* the ring trails the pointer and swells over interactive things */
-  .cursor-ring {
-    position: fixed; top: 0; left: 0; width: 34px; height: 34px;
-    margin: -17px 0 0 -17px; border: 1.5px solid rgba(11,11,12,.5);
-    border-radius: 50%; pointer-events: none; z-index: 9999;
-    opacity: 0; transition: opacity .25s, width .25s var(--ease), height .25s var(--ease),
-                            margin .25s var(--ease), border-color .25s, background .25s;
-    will-change: transform;
-  }
-  .cursor-ring.on { opacity: 1; }
-  .cursor-ring.hot {
-    width: 56px; height: 56px; margin: -28px 0 0 -28px;
-    border-color: var(--paper); background: rgba(236,208,111,.28);
-  }
-  /* on the dark bands the blue ring disappears, so invert it there */
-  .cursor-ring.dark { border-color: rgba(236,208,111,.65); }
-  .cursor-ring.dark.hot { border-color: var(--gold); background: rgba(236,208,111,.2); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .cursor-ring { display: none !important; }
-}
 
 
 /* Footer social links.
@@ -744,4 +709,38 @@ ul.plain li::before { content: ""; position: absolute; left: 0; top: .74em; widt
 @media (hover: none) {
   .pcard:hover { transform: none; box-shadow: none; border-color: #26262e; }
   .pcard:hover .pcard-media img { transform: none; }
+}
+
+
+/* ============================================================
+   CUSTOM CURSOR
+   Fine pointers only. Black arrow by default, gold over anything
+   clickable — the state change is the point, or links stop
+   feeling clickable.
+   ============================================================ */
+
+@media (pointer: fine) {
+  body { cursor: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2226%22%20height%3D%2226%22%20viewBox%3D%220%200%2026%2026%22%3E%3Cpath%20d%3D%22M5%202.5%20L5%2020.5%20L9.8%2016%20L12.9%2023%20L16.3%2021.5%20L13.2%2014.6%20L20%2014.3%20Z%22%20fill%3D%22%230b0b0c%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%221.4%22%20stroke-linejoin%3D%22round%22/%3E%3C/svg%3E") 4 2, auto; }
+  a, button, .prail a, summary, label { cursor: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%2226%22%20height%3D%2226%22%20viewBox%3D%220%200%2026%2026%22%3E%3Cpath%20d%3D%22M5%202.5%20L5%2020.5%20L9.8%2016%20L12.9%2023%20L16.3%2021.5%20L13.2%2014.6%20L20%2014.3%20Z%22%20fill%3D%22%23ecd06f%22%20stroke%3D%22%23ffffff%22%20stroke-width%3D%221.4%22%20stroke-linejoin%3D%22round%22/%3E%3C/svg%3E") 4 2, pointer; }
+  input, textarea, select { cursor: text; }
+
+  .cursor-ring {
+    position: fixed; top: 0; left: 0; width: 34px; height: 34px;
+    margin: -17px 0 0 -17px; border: 1.5px solid rgba(11,11,12,.45);
+    border-radius: 50%; pointer-events: none; z-index: 9999;
+    opacity: 0; transition: opacity .25s, width .25s var(--ease), height .25s var(--ease),
+                            margin .25s var(--ease), border-color .25s, background .25s;
+    will-change: transform;
+  }
+  .cursor-ring.on { opacity: 1; }
+  .cursor-ring.hot {
+    width: 56px; height: 56px; margin: -28px 0 0 -28px;
+    border-color: var(--paper); background: rgba(236,208,111,.3);
+  }
+  .cursor-ring.dark { border-color: rgba(236,208,111,.6); }
+  .cursor-ring.dark.hot { border-color: var(--gold); background: rgba(236,208,111,.22); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cursor-ring { display: none !important; }
 }

@@ -149,6 +149,36 @@
     draw();
   }
 
+  /* ---------- project rail scroll-spy ----------
+     Plain anchor links, so they work with JavaScript off. This only
+     adds the active state as you scroll past each case. */
+  var rail = document.querySelector(".prail");
+  if (rail && "IntersectionObserver" in window) {
+    var railLinks = rail.querySelectorAll("a");
+    var cases = [];
+    Array.prototype.forEach.call(railLinks, function (a) {
+      var el = document.getElementById(a.getAttribute("href").slice(1));
+      if (el) cases.push({ link: a, el: el });
+    });
+    if (cases.length) {
+      var mark = function (id) {
+        cases.forEach(function (c) {
+          if (c.el.id === id) c.link.setAttribute("aria-current", "true");
+          else c.link.removeAttribute("aria-current");
+        });
+      };
+      var rio = new IntersectionObserver(function (entries) {
+        var best = null;
+        entries.forEach(function (e) {
+          if (e.isIntersecting && (!best || e.intersectionRatio > best.intersectionRatio)) best = e;
+        });
+        if (best) mark(best.target.id);
+      }, { rootMargin: "-30% 0px -55% 0px", threshold: [0, 0.25, 0.5, 1] });
+      cases.forEach(function (c) { rio.observe(c.el); });
+      mark(cases[0].el.id);
+    }
+  }
+
   /* ---------- project tabs ----------
      Every panel stays in the DOM, so the HTML a crawler sees is
      complete. Only visibility changes. */
