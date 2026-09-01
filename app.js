@@ -172,6 +172,31 @@
     draw();
   }
 
+  /* ---------- accordion rows ----------
+     One open at a time. The panel is a real button + aria-expanded so
+     it works from the keyboard, and every row's content stays in the
+     DOM so a crawler sees all of it. */
+  var rowlist = document.getElementById("rowlist");
+  if (rowlist) {
+    var rows = rowlist.querySelectorAll(".row");
+    Array.prototype.forEach.call(rows, function (row) {
+      var head = row.querySelector(".row-head");
+      if (!head) return;
+      head.addEventListener("click", function () {
+        var opening = !row.classList.contains("open");
+        Array.prototype.forEach.call(rows, function (r) {
+          r.classList.remove("open");
+          var h = r.querySelector(".row-head");
+          if (h) h.setAttribute("aria-expanded", "false");
+        });
+        if (opening) {
+          row.classList.add("open");
+          head.setAttribute("aria-expanded", "true");
+        }
+      });
+    });
+  }
+
   /* ---------- live model readout ----------
      Pulls the forecast's own output file. If the request fails —
      offline, CORS, repo renamed — the panel says so plainly rather
