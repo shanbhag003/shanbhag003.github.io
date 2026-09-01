@@ -1266,3 +1266,61 @@ ul.plain li::before { content: ""; position: absolute; left: 0; top: .74em; widt
 
 /* the case hero sits on the warm ground, so the rail needs the dark
    treatment only once it's over a dark case — it always is */
+
+
+/* ============================================================
+   SURFACE
+   The dark bands already had a grid; the light grounds had
+   nothing, so they read as blank paper. Three layers, all CSS:
+   a fine grain, the same 56px grid, and a soft gold haze at the
+   top of each hero so the empty area isn't a flat field.
+   ============================================================ */
+
+:root { --grain: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A//www.w3.org/2000/svg%22%20width%3D%22180%22%20height%3D%22180%22%3E%3Cfilter%20id%3D%22n%22%3E%3CfeTurbulence%20type%3D%22fractalNoise%22%20baseFrequency%3D%220.82%22%20numOctaves%3D%223%22%20stitchTiles%3D%22stitch%22/%3E%3CfeColorMatrix%20type%3D%22saturate%22%20values%3D%220%22/%3E%3C/filter%3E%3Crect%20width%3D%22180%22%20height%3D%22180%22%20filter%3D%22url%28%23n%29%22%20opacity%3D%220.5%22/%3E%3C/svg%3E"); }
+
+body {
+  background-image:
+    var(--grain),
+    linear-gradient(to right, rgba(11,11,12,.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(11,11,12,.03) 1px, transparent 1px);
+  background-size: 180px 180px, 56px 56px, 56px 56px;
+}
+
+/* light bands: grain + grid */
+.band-white, .band-warm, .band-tint {
+  background-image:
+    var(--grain),
+    linear-gradient(to right, rgba(11,11,12,.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(11,11,12,.035) 1px, transparent 1px);
+  background-size: 180px 180px, 56px 56px, 56px 56px;
+}
+
+/* dark bands keep their grid, and pick up the grain too */
+.band-dark, .foot {
+  background-image:
+    linear-gradient(to right, rgba(255,255,255,.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,255,255,.03) 1px, transparent 1px);
+  background-size: 56px 56px, 56px 56px;
+}
+.band-gold {
+  background-image:
+    linear-gradient(to right, rgba(11,11,12,.045) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(11,11,12,.045) 1px, transparent 1px);
+  background-size: 56px 56px, 56px 56px;
+}
+
+/* a soft gold haze behind every hero, so the whitespace has depth */
+.hero { position: relative; }
+.hero::before {
+  content: ""; position: absolute; top: -1px; bottom: 0;
+  left: calc(-50vw + 50%); right: calc(-50vw + 50%);
+  background:
+    radial-gradient(72rem 34rem at 12% -12%, rgba(236,208,111,.20), transparent 62%),
+    radial-gradient(48rem 26rem at 88% 8%, rgba(11,11,12,.045), transparent 60%);
+  pointer-events: none; z-index: 0;
+}
+.hero > * { position: relative; z-index: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  body { background-attachment: scroll; }
+}
