@@ -173,25 +173,45 @@
   }
 
   /* ---------- accordion rows ----------
-     One open at a time. The panel is a real button + aria-expanded so
-     it works from the keyboard, and every row's content stays in the
-     DOM so a crawler sees all of it. */
-  var rowlist = document.getElementById("rowlist");
-  if (rowlist) {
-    var rows = rowlist.querySelectorAll(".row");
-    Array.prototype.forEach.call(rows, function (row) {
-      var head = row.querySelector(".row-head");
-      if (!head) return;
-      head.addEventListener("click", function () {
-        var opening = !row.classList.contains("open");
+     One open at a time. On a mouse the row opens as you move onto it
+     and the previous one collapses; click and keyboard still work, and
+     touch devices get click only. Every panel stays in the DOM so a
+     crawler sees all of it. */
+  var rowlists = document.querySelectorAll(".rowlist");
+  if (rowlists.length) {
+    var canHover = window.matchMedia("(hover: hover) and (pointer: fine)").matches;
+
+    Array.prototype.forEach.call(rowlists, function (list) {
+      var rows = list.querySelectorAll(".row");
+      var timer = null;
+
+      var open = function (row) {
         Array.prototype.forEach.call(rows, function (r) {
-          r.classList.remove("open");
+          var on = r === row;
+          r.classList.toggle("open", on);
           var h = r.querySelector(".row-head");
-          if (h) h.setAttribute("aria-expanded", "false");
+          if (h) h.setAttribute("aria-expanded", on ? "true" : "false");
         });
-        if (opening) {
-          row.classList.add("open");
-          head.setAttribute("aria-expanded", "true");
+      };
+
+      Array.prototype.forEach.call(rows, function (row) {
+        var head = row.querySelector(".row-head");
+        if (!head) return;
+
+        head.addEventListener("click", function () {
+          open(row.classList.contains("open") && !canHover ? null : row);
+        });
+
+        /* keyboard users get the same reveal as they tab through */
+        head.addEventListener("focus", function () { open(row); });
+
+        if (canHover && !reduce) {
+          row.addEventListener("mouseenter", function () {
+            clearTimeout(timer);
+            /* small delay so sweeping the cursor down the list doesn't thrash */
+            timer = setTimeout(function () { open(row); }, 90);
+          });
+          row.addEventListener("mouseleave", function () { clearTimeout(timer); });
         }
       });
     });
