@@ -474,16 +474,16 @@ ul.plain li::before { content: ""; position: absolute; left: 0; top: .74em; widt
   /* the menu is part of the header, in normal flow — opening it pushes the
      page down rather than covering what you were reading */
   .nav ul {
-    order: 3; flex: 1 0 100%; display: none; flex-direction: column; gap: 0;
+    order: 3; flex: 1 0 100%; display: none; flex-direction: column; gap: .1rem;
     margin: 0 calc(-1 * var(--gut)); padding: 0 var(--gut) .6rem;
     border-top: 1px solid #242426;
   }
   .nav.open ul { display: flex; }
   .nav ul li { width: 100%; }
   .nav a:not(.brand) {
-    font-family: var(--display); font-size: 1.4rem; font-weight: 600;
+    font-family: var(--display); font-size: 1.35rem; font-weight: 600;
     letter-spacing: -.03em; display: block; width: 100%;
-    padding: 1rem 0; border-bottom: 1px solid #1e1e20; border-top: 0;
+    padding: .6rem 0; border-bottom: 0; border-top: 0;
   }
   .nav ul li:last-child a { border-bottom: 0; }
   .nav a:not(.brand):hover { border-bottom-color: #1e1e20; }
@@ -1201,11 +1201,7 @@ ul.plain li::before { content: ""; position: absolute; left: 0; top: .74em; widt
 
 /* nav sits over the stage until you scroll */
 .nav.over { background: transparent; border-bottom: 0; }
-@media (min-width: 861px) {
-  .nav.over .brand { position: absolute; left: var(--gut); top: 50%; transform: translateY(-50%); }
-  .nav.over .wrap { position: relative; }
-  .nav.over ul { flex: 1 1 100%; justify-content: space-between; margin: 0; }
-}
+
 .nav.over .brand { opacity: 0; transform: translateY(-6px); pointer-events: none; }
 /* but the open mobile menu needs it back, or the panel has a bald corner */
 .nav.over.open .brand { opacity: 1; transform: none; pointer-events: auto; }
@@ -1401,10 +1397,10 @@ body.lb-open { overflow: hidden; }
 .band-gold .cwall li:hover { color: #fff; }
 
 /* ============================================================
-   NAV: a focal point
-   Five identical labels with no call to action read as dull, so
-   the nav gets a Contact pill and the links get a gold underline
-   that draws in on hover.
+   NAV
+   Brand left, links grouped in the centre. A three-column grid
+   centres the link group on the page regardless of how wide the
+   brand is, which edge-to-edge spacing could not do.
    ============================================================ */
 
 .nav a:not(.brand) { position: relative; border-bottom: 0; }
@@ -1416,32 +1412,12 @@ body.lb-open { overflow: hidden; }
 .nav a[aria-current="page"] { color: #fff; }
 .nav a[aria-current="page"]::after { right: 0; }
 
-/* the pill */
-.nav-cta { margin-left: clamp(.75rem, 2vw, 2rem); }
-.nav .nav-cta a {
-  display: inline-flex; align-items: center; gap: .5rem;
-  padding: .55rem 1.15rem; border: 1px solid #3a3a3d; border-radius: 999px;
-  color: #fff; font-weight: 500;
-  transition: background .22s, border-color .22s, color .22s, transform .22s var(--ease);
-}
-.nav .nav-cta a::after { content: none; }
-.nav .nav-cta a:hover { background: var(--gold); border-color: var(--gold); color: var(--paper); transform: translateY(-1px); }
-.cta-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); flex: 0 0 auto; animation: pulse 2.8s var(--ease) infinite; }
-.nav .nav-cta a:hover .cta-dot { background: var(--paper); }
-
-/* over the hero the links share the width; the pill holds the right end */
 @media (min-width: 861px) {
-  .nav.over ul { flex: 1 1 100%; justify-content: space-between; }
-  .nav.over .nav-cta { margin-left: 0; }
+  .nav .wrap { display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; }
+  .nav .brand { grid-column: 1; justify-self: start; }
+  .nav ul { grid-column: 2; justify-self: center; gap: clamp(1.5rem, 2.6vw, 2.4rem); margin: 0; }
+  .nav.over .brand { position: static; }
+  .nav .nav-cta { display: none; }   /* desktop: no pill; mobile keeps it */
 }
 
-/* in the mobile panel it becomes a full-width button */
-@media (max-width: 860px) {
-  .nav ul li.nav-cta { margin: .9rem 0 .25rem; }
-  .nav .nav-cta a {
-    justify-content: center; width: 100%; padding: .95rem 1.2rem;
-    background: var(--gold); border-color: var(--gold); color: var(--paper);
-    font-family: var(--body); font-size: 1.0625rem; border-bottom: 0;
-  }
-  .nav .nav-cta a .cta-dot { background: var(--paper); }
-}
+
