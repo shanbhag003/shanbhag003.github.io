@@ -1324,3 +1324,49 @@ body {
 @media (prefers-reduced-motion: reduce) {
   body { background-attachment: scroll; }
 }
+
+.live-legend {
+  font-family: var(--mono); font-size: .6875rem; letter-spacing: .1em;
+  text-transform: uppercase; color: var(--gold); margin: 0 0 .35rem;
+}
+
+/* ============================================================
+   LIGHTBOX
+   Every content image opens full-size. Closes on the backdrop,
+   the close button, or Escape. Focus returns to the image that
+   opened it.
+   ============================================================ */
+
+@media (pointer: fine) {
+  .zoomable { cursor: zoom-in; }
+}
+
+.lb {
+  position: fixed; inset: 0; z-index: 10000; display: none;
+  align-items: center; justify-content: center;
+  padding: clamp(1rem, 4vw, 3rem);
+  background: rgba(7,7,10,.95); backdrop-filter: blur(6px);
+}
+.lb.on { display: flex; }
+.lb-fig { margin: 0; max-width: 100%; max-height: 100%; display: flex; flex-direction: column; gap: .85rem; }
+.lb-fig img {
+  max-width: 100%; max-height: 82vh; width: auto; height: auto;
+  border: 1px solid #30303a; border-radius: 10px; background: #08080b;
+  animation: lbIn .32s var(--ease) both;
+}
+@keyframes lbIn { from { opacity: 0; transform: scale(.97) } to { opacity: 1; transform: none } }
+.lb-cap {
+  font-family: var(--mono); font-size: .75rem; line-height: 1.6;
+  color: #a9a59e; max-width: 74ch; margin: 0 auto; text-align: center;
+}
+.lb-close {
+  position: absolute; top: clamp(.75rem, 2vw, 1.5rem); right: clamp(.75rem, 2vw, 1.5rem);
+  width: 46px; height: 46px; border-radius: 50%; cursor: pointer;
+  background: rgba(255,255,255,.08); border: 1px solid #3a3a3d; color: #fff;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 1.35rem; line-height: 1; transition: background .18s, border-color .18s;
+}
+.lb-close:hover { background: var(--gold); border-color: var(--gold); color: var(--paper); }
+body.lb-open { overflow: hidden; }
+
+@media (prefers-reduced-motion: reduce) { .lb-fig img { animation: none; } }

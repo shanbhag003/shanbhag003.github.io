@@ -172,6 +172,75 @@
     draw();
   }
 
+  /* ---------- image lightbox ----------
+     Every content image opens full-size. Decorative images (the stage
+     backdrop, anything with an empty alt) are skipped, since there's
+     nothing to look at more closely. */
+  (function () {
+    var imgs = Array.prototype.filter.call(
+      document.querySelectorAll("main img"),
+      function (im) { return im.getAttribute("alt") && !im.closest(".stage-bg"); }
+    );
+    if (!imgs.length) return;
+
+    var lb = document.createElement("div");
+    lb.className = "lb";
+    lb.setAttribute("role", "dialog");
+    lb.setAttribute("aria-modal", "true");
+    lb.setAttribute("aria-label", "Enlarged image");
+    lb.innerHTML =
+      '<button class="lb-close" type="button" aria-label="Close image">&times;</button>' +
+      '<figure class="lb-fig"><img alt=""><figcaption class="lb-cap"></figcaption></figure>';
+    document.body.appendChild(lb);
+
+    var lbImg = lb.querySelector("img");
+    var lbCap = lb.querySelector(".lb-cap");
+    var lbClose = lb.querySelector(".lb-close");
+    var opener = null;
+    var scrollY = 0;
+
+    var close = function () {
+      lb.classList.remove("on");
+      document.body.classList.remove("lb-open");
+      document.body.style.top = "";
+      window.scrollTo(0, scrollY);
+      lbImg.removeAttribute("src");
+      if (opener) { opener.focus({ preventScroll: true }); opener = null; }
+    };
+
+    var open = function (im) {
+      opener = im;
+      scrollY = window.scrollY;
+      lbImg.src = im.currentSrc || im.src;
+      lbImg.alt = im.alt;
+      lbCap.textContent = im.alt;
+      lb.classList.add("on");
+      document.body.classList.add("lb-open");
+      lbClose.focus({ preventScroll: true });
+    };
+
+    imgs.forEach(function (im) {
+      /* images inside a link navigate instead — no zoom cursor, no handler */
+      if (im.closest("a")) return;
+      im.classList.add("zoomable");
+      im.addEventListener("click", function () { open(im); });
+      im.setAttribute("tabindex", "0");
+      im.setAttribute("role", "button");
+      im.addEventListener("keydown", function (e) {
+        if (e.key === "Enter" || e.key === " ") { e.preventDefault(); open(im); }
+      });
+    });
+
+    lbClose.addEventListener("click", close);
+    /* clicking the backdrop closes; clicking the image itself does not */
+    lb.addEventListener("click", function (e) { if (e.target === lb) close(); });
+    document.addEventListener("keydown", function (e) {
+      if (e.key === "Escape" && lb.classList.contains("on")) close();
+      /* keep focus inside while open */
+      if (e.key === "Tab" && lb.classList.contains("on")) { e.preventDefault(); lbClose.focus(); }
+    });
+  })();
+
   /* ---------- the stage ----------
      Backdrop crossfades between Kartik's own project output. The nav
      rides transparent over it and turns solid once you scroll past.
