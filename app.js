@@ -172,6 +172,50 @@
     draw();
   }
 
+  /* ---------- the stage ----------
+     Backdrop crossfades between Kartik's own project output. The nav
+     rides transparent over it and turns solid once you scroll past.
+     Under reduced-motion it holds on the first image. */
+  var stage = document.getElementById("stage");
+  if (stage && nav) {
+    var slides = stage.querySelectorAll(".stage-bg img");
+    var thumbs = stage.querySelectorAll(".stage-thumb");
+    var ticks = stage.querySelectorAll(".stage-ticks i");
+    var cur = 0, auto = null;
+
+    var go = function (i) {
+      cur = (i + slides.length) % slides.length;
+      Array.prototype.forEach.call(slides, function (el, n) { el.classList.toggle("on", n === cur); });
+      Array.prototype.forEach.call(thumbs, function (el, n) {
+        if (n === cur) el.setAttribute("aria-current", "true"); else el.removeAttribute("aria-current");
+      });
+      Array.prototype.forEach.call(ticks, function (el, n) { el.classList.toggle("on", n === cur); });
+    };
+
+    var start = function () { if (!reduce) auto = setInterval(function () { go(cur + 1); }, 6000); };
+    var stop = function () { clearInterval(auto); auto = null; };
+
+    Array.prototype.forEach.call(thumbs, function (el) {
+      el.addEventListener("click", function () {
+        stop(); go(parseInt(el.getAttribute("data-i"), 10)); start();
+      });
+    });
+
+    /* don't burn cycles animating a hero nobody is looking at */
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (es) {
+        es.forEach(function (e) { if (e.isIntersecting) start(); else stop(); });
+      }, { threshold: 0.15 }).observe(stage);
+    } else { start(); }
+
+    var solid = function () {
+      nav.classList.toggle("over", window.scrollY < stage.offsetHeight - parseInt(getComputedStyle(document.documentElement).getPropertyValue("--nav-h")) - 40);
+    };
+    solid();
+    window.addEventListener("scroll", solid, { passive: true });
+    window.addEventListener("resize", solid);
+  }
+
   /* ---------- accordion rows ----------
      One open at a time. On a mouse the row opens as you move onto it
      and the previous one collapses; click and keyboard still work, and

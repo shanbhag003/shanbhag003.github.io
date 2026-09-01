@@ -58,7 +58,7 @@ code { font-family: var(--mono); font-size: .875em; color: var(--gold-deep); }
 
 /* ---------- nav ---------- */
 
-.nav { background: var(--band-dark); position: sticky; top: 0; z-index: 40; }
+.nav { background: var(--band-dark); position: sticky; top: 0; z-index: 40; border-bottom: 1px solid rgba(255,255,255,.1); transition: background .35s var(--ease), border-color .35s; }
 .nav .wrap { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 76px; }
 .brand {
   font-family: var(--display); font-weight: 700; font-size: 1.6rem;
@@ -118,8 +118,8 @@ code { font-family: var(--mono); font-size: .875em; color: var(--gold-deep); }
 .eyebrow.live { color: var(--paper); }
 
 h1, h2, h3, h4 { font-family: var(--display); font-weight: 600; letter-spacing: -.035em; line-height: 1.08; margin: 0 0 1rem; }
-h1 { font-size: clamp(2.4rem, 6.4vw, 4.4rem); font-weight: 700; }
-h2 { font-size: clamp(1.7rem, 3.6vw, 2.5rem); letter-spacing: -.03em; }
+h1 { font-size: clamp(2.6rem, 7.6vw, 5.6rem); font-weight: 700; letter-spacing: -.045em; }
+h2 { font-size: clamp(1.95rem, 4.6vw, 3.4rem); letter-spacing: -.04em; }
 h3 { font-size: clamp(1.15rem, 2vw, 1.45rem); letter-spacing: -.02em; }
 h4 { font-size: 1.0625rem; }
 
@@ -129,7 +129,7 @@ p.lede { font-size: clamp(1.1rem, 1.75vw, 1.3rem); color: #33312c; line-height: 
 strong { color: #000; font-weight: 600; }
 em { color: #2c2a25; }
 
-section { padding: clamp(3.5rem, 8vw, 6.5rem) 0; }
+section { padding: clamp(3.75rem, 9vw, 7.5rem) 0; }
 section + section { border-top: 1px solid var(--line); }
 
 /* Every section gets its own ground. Four families, deliberately different
@@ -164,7 +164,7 @@ section.band-dark + section { border-top: 0; }
 
 /* ---------- hero ---------- */
 
-.hero { padding-top: clamp(3.5rem, 9vw, 7rem); padding-bottom: clamp(3rem, 7vw, 5.5rem); }
+.hero { padding-top: clamp(4rem, 11vw, 9rem); padding-bottom: clamp(3.5rem, 8vw, 6.5rem); }
 .hero h1 { max-width: 24ch; }
 .hero h1 .sub {
   display: block; font-size: clamp(1.1rem, 2vw, 1.5rem); font-weight: 400;
@@ -1108,3 +1108,97 @@ ul.plain li::before { content: ""; position: absolute; left: 0; top: .74em; widt
 @media (prefers-reduced-motion: reduce) {
   .row-body { transition: none; }
 }
+
+/* ============================================================
+   THE STAGE — full-viewport hero
+   Composition taken from the reference: transparent nav over a
+   full-bleed backdrop, a hairline under it, small intro left,
+   a stacked capability list right, an oversized wordmark on the
+   baseline, and a thumbnail strip bottom-right.
+   The backdrop images are Kartik's own project output, darkened.
+   ============================================================ */
+
+.stage {
+  position: relative; min-height: 100svh; min-height: 100vh;
+  display: flex; flex-direction: column; justify-content: space-between;
+  overflow: hidden; background: #07070a; color: #fff;
+  margin-top: calc(-1 * var(--nav-h)); padding-top: var(--nav-h);
+}
+.stage-bg { position: absolute; inset: 0; z-index: 0; }
+.stage-bg img {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; opacity: 0; transition: opacity 1.2s var(--ease);
+  transform: scale(1.08); filter: blur(3px) saturate(.85);
+}
+.stage-bg img.on { opacity: 1; }
+.stage-bg::after {
+  content: ""; position: absolute; inset: 0;
+  background:
+    linear-gradient(to bottom, rgba(7,7,10,.7) 0%, rgba(7,7,10,.5) 45%, rgba(7,7,10,.92) 100%),
+    linear-gradient(to right, rgba(7,7,10,.55), rgba(7,7,10,.1) 70%);
+}
+.stage > .wrap { position: relative; z-index: 1; }
+
+.stage-top {
+  display: grid; grid-template-columns: 1fr auto; gap: 2rem;
+  padding-top: clamp(1.25rem, 2.2vw, 1.75rem);
+  border-top: 1px solid rgba(255,255,255,.16);
+  margin-top: 0;
+}
+.stage-intro { max-width: 32ch; font-size: clamp(.9375rem, 1.2vw, 1.0625rem); line-height: 1.5; color: rgba(255,255,255,.86); margin: 0; }
+.stage-list { list-style: none; margin: 0; padding: 0; text-align: right; }
+.stage-list li {
+  font-size: clamp(.875rem, 1.15vw, 1.0625rem); color: rgba(255,255,255,.76);
+  padding: .18rem 0; letter-spacing: -.01em;
+}
+
+.stage-bottom { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: end; gap: 2.5rem; padding-bottom: clamp(1.5rem, 3vw, 2.5rem); }
+.stage-mark {
+  font-family: var(--display); font-weight: 700;
+  font-size: clamp(2.1rem, 7.1vw, 6.6rem); line-height: .88; white-space: nowrap;
+  letter-spacing: -.055em; margin: 0; color: #fff;
+  text-transform: lowercase;
+}
+.stage-mark sup { font-size: .26em; vertical-align: super; letter-spacing: 0; color: var(--gold); }
+
+.stage-thumbs { display: flex; gap: .5rem; align-items: flex-end; }
+.stage-thumb {
+  appearance: none; padding: 0; cursor: pointer; background: none;
+  border: 1px solid rgba(255,255,255,.22); border-radius: 6px; overflow: hidden;
+  width: 92px; opacity: .55; transition: opacity .25s, border-color .25s, transform .25s var(--ease);
+}
+.stage-thumb img { display: block; width: 100%; height: auto; }
+.stage-thumb:hover { opacity: .85; transform: translateY(-2px); }
+.stage-thumb[aria-current="true"] { opacity: 1; border-color: var(--gold); }
+.stage-ticks { display: flex; gap: 4px; margin-top: .5rem; }
+.stage-ticks i { display: block; width: 26px; height: 2px; background: rgba(255,255,255,.28); }
+.stage-ticks i.on { background: var(--gold); }
+
+.stage-scroll {
+  position: absolute; left: 50%; bottom: 1.1rem; transform: translateX(-50%);
+  font-family: var(--mono); font-size: .625rem; letter-spacing: .22em;
+  text-transform: uppercase; color: rgba(255,255,255,.45); z-index: 2;
+}
+
+@media (max-width: 780px) {
+  .stage-top { grid-template-columns: 1fr; gap: 1.1rem; }
+  .stage-list { text-align: left; display: flex; flex-wrap: wrap; gap: .1rem 1rem; }
+  .stage-bottom { grid-template-columns: 1fr; align-items: start; gap: 1.25rem; }
+  .stage-thumbs { justify-content: flex-start; }
+  .stage-thumb { width: 68px; }
+  .stage-scroll { display: none; }
+}
+
+/* nav sits over the stage until you scroll */
+.nav.over { background: transparent; border-bottom: 0; }
+.nav.over::after { content: none; }
+
+/* ---------- statement marquee ---------- */
+.smq { overflow: hidden; padding: clamp(2rem, 4vw, 3.25rem) 0; background: var(--gold); }
+.smq-track { display: flex; width: max-content; gap: 2.5rem; align-items: center; animation: drift 32s linear infinite; }
+.smq-track span {
+  font-family: var(--display); font-weight: 700; white-space: nowrap;
+  font-size: clamp(1.8rem, 5vw, 4rem); letter-spacing: -.045em; color: var(--paper);
+}
+.smq-track b { color: rgba(11,11,12,.35); font-weight: 700; }
+@media (prefers-reduced-motion: reduce) { .smq-track { animation: none; } }
