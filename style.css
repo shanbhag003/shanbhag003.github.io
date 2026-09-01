@@ -1218,3 +1218,51 @@ ul.plain li::before { content: ""; position: absolute; left: 0; top: .74em; widt
 }
 .smq-track b { color: rgba(11,11,12,.35); font-weight: 700; }
 @media (prefers-reduced-motion: reduce) { .smq-track { animation: none; } }
+
+/* ============================================================
+   CASE STUDIES ON DARK
+   The project screens are dark images in dark bezels — on white
+   they float, on a dark ground they read as screens. Every
+   component in a case block gets a dark counterpart here.
+   ============================================================ */
+
+.case.alt { background: #101016; }          /* a perceptible step between cases */
+.case + .case { border-top: 1px solid #24242a; }
+.band-dark .screen { background: #16161d; border-color: #30303a; }
+.band-dark .screen-bar { background: #101017; border-bottom-color: #30303a; }
+
+/* the rail joins the nav as one dark header stack */
+.prail { background: rgba(13,13,16,.94); border-bottom: 1px solid #26262e; }
+.prail a { color: #8b8780; border-color: transparent; }
+.prail a:hover { color: #fff; }
+.prail-track { background: #1b1b21; }
+.prail-ind { background: var(--gold); }
+.prail a[aria-current="true"] { color: var(--paper); background: transparent; border-color: transparent; }
+.prail-track:not(.js) a[aria-current="true"] { background: var(--gold); color: var(--paper); }
+
+/* metrics */
+.band-dark .metric { border-top-color: var(--gold); }
+.band-dark .mval { color: #fff; }
+.band-dark .mlab { color: #fff; }
+.band-dark .mnote { color: #8b8780; }
+
+/* the rejected ledger */
+.band-dark .rejected { border-top-color: var(--gold); }
+.band-dark .rejected > .eyebrow { color: var(--gold); }
+.band-dark .rej-list li { border-bottom-color: #26262e; }
+.band-dark .rej-list s { color: #8b8780; text-decoration-color: var(--gold); }
+.band-dark .rej-list span { color: #b9b9bd; }
+
+/* honest notes */
+.band-dark .note { border-left-color: var(--gold); }
+.band-dark .note > .eyebrow { color: var(--gold); }
+.band-dark .quote { color: #fff; }
+
+.band-dark .stackline { color: #8b8780; }
+.band-dark .footnote { color: #8b8780; }
+.band-dark .diagram img { border-color: #26262e; }
+.band-dark .diagram figcaption { color: #8b8780; }
+.band-dark code { color: var(--gold); }
+
+/* the case hero sits on the warm ground, so the rail needs the dark
+   treatment only once it's over a dark case — it always is */
