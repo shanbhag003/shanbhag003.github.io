@@ -440,7 +440,7 @@ ul.plain li::before { content: ""; position: absolute; left: 0; top: .74em; widt
 
 /* ---------- motion ---------- */
 
-.reveal { opacity: 0; transform: translateY(20px); transition: opacity .7s var(--ease), transform .7s var(--ease); }
+.reveal { opacity: 0; transform: translateY(30px); transition: opacity .8s var(--ease), transform .8s var(--ease); }
 .reveal.in { opacity: 1; transform: none; }
 .reveal.d1 { transition-delay: .08s } .reveal.d2 { transition-delay: .16s }
 .reveal.d3 { transition-delay: .24s } .reveal.d4 { transition-delay: .32s }
@@ -529,7 +529,7 @@ ul.plain li::before { content: ""; position: absolute; left: 0; top: .74em; widt
   .foot-grid { gap: 1.75rem; }
   .foot-base { margin-top: 2rem; flex-direction: column; gap: .5rem; }
 
-  .reveal { transform: translateY(12px); }
+  .reveal { transform: translateY(16px); }
   .rise { transform: translateY(14px); }
 }
 
@@ -627,15 +627,22 @@ ul.plain li::before { content: ""; position: absolute; left: 0; top: .74em; widt
   display: grid; grid-template-columns: 9rem 1fr; column-gap: clamp(1.5rem, 4vw, 4rem); row-gap: 0;
   align-items: start; border-top: 1px solid #2a2a2c; padding: 2rem 0;
 }
-.stat:first-child { border-top: 1px solid var(--gold); }
+.stat:first-child { border-top: 1.5px solid var(--gold-deep); }
 .stat-n {
   font-family: var(--display); font-weight: 700;
   font-size: clamp(3rem, 5.2vw, 4.4rem); line-height: .88; letter-spacing: -.05em;
-  color: var(--gold); font-variant-numeric: tabular-nums;
+  color: var(--gold-deep); font-variant-numeric: tabular-nums;
 }
 .stat-n { grid-column: 1; grid-row: 1 / span 2; }
-.stat h3 { grid-column: 2; grid-row: 1; font-size: clamp(1.15rem, 2vw, 1.5rem); letter-spacing: -.025em; margin-bottom: .55rem; color: #fff; }
-.stat p { grid-column: 2; grid-row: 2; font-size: .9375rem; color: #a9a59e; margin: 0; max-width: 62ch; }
+.stat h3 { grid-column: 2; grid-row: 1; font-size: clamp(1.15rem, 2vw, 1.5rem); letter-spacing: -.025em; margin-bottom: .55rem; color: var(--paper); }
+.stat p { grid-column: 2; grid-row: 2; font-size: .9375rem; color: var(--muted); margin: 0; max-width: 62ch; }
+
+/* on a dark ground the same component flips */
+.band-dark .stat { border-top-color: #2a2a2c; }
+.band-dark .stat:first-child { border-top-color: var(--gold); }
+.band-dark .stat-n { color: var(--gold); }
+.band-dark .stat h3 { color: #fff; }
+.band-dark .stat p { color: #a9a59e; }
 
 @media (max-width: 620px) {
   .stat { grid-template-columns: 1fr; column-gap: 0; row-gap: .3rem; padding: 1.5rem 0; }

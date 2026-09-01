@@ -112,25 +112,48 @@
   }
 
   /* ---------- scroll reveal ----------
-     A tall block (three stacked claim cards on a phone) must not sit
-     invisible while occupying space, so this fires the moment any part
-     of an element edges into view — and a failsafe reveals everything
+     Sections animate in as a unit: when a block crosses into view its
+     children rise in sequence, so the page arrives section by section
+     rather than element by element. A failsafe reveals everything
      regardless, so content can never be stranded at opacity 0. */
   var targets = document.querySelectorAll(".reveal");
   var showAll = function () {
-    Array.prototype.forEach.call(targets, function (el) { el.classList.add("in"); });
+    Array.prototype.forEach.call(targets, function (el) {
+      el.style.transitionDelay = "";
+      el.classList.add("in");
+    });
   };
 
   if (reduce || !("IntersectionObserver" in window)) {
     showAll();
   } else {
-    var io = new IntersectionObserver(function (entries) {
+    var blocks = document.querySelectorAll("main > section, main > header, .case, footer");
+    var revealBlock = function (block) {
+      var kids = block.querySelectorAll(".reveal");
+      Array.prototype.forEach.call(kids, function (el, i) {
+        el.style.transitionDelay = Math.min(i * 90, 540) + "ms";
+        el.classList.add("in");
+      });
+    };
+
+    var bio = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
-        if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+        if (e.isIntersecting) { revealBlock(e.target); bio.unobserve(e.target); }
+      });
+    }, { rootMargin: "0px 0px -18% 0px", threshold: 0.06 });
+    Array.prototype.forEach.call(blocks, function (blk) { bio.observe(blk); });
+
+    /* anything not inside a tracked block still reveals on its own */
+    var loose = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add("in"); loose.unobserve(e.target); }
       });
     }, { rootMargin: "0px 0px -40px 0px", threshold: 0 });
-    Array.prototype.forEach.call(targets, function (el) { io.observe(el); });
-    setTimeout(showAll, 2500);
+    Array.prototype.forEach.call(targets, function (el) {
+      if (!el.closest("main > section, main > header, .case, footer")) loose.observe(el);
+    });
+
+    setTimeout(showAll, 3000);
     window.addEventListener("pageshow", function (e) { if (e.persisted) showAll(); });
   }
 
