@@ -1145,11 +1145,17 @@ ul.plain li::before { content: ""; position: absolute; left: 0; top: .74em; widt
   border-top: 1px solid rgba(255,255,255,.16);
   margin-top: 0;
 }
-.stage-intro { max-width: 32ch; font-size: clamp(.9375rem, 1.2vw, 1.0625rem); line-height: 1.5; color: rgba(255,255,255,.86); margin: 0; }
+.stage-intro {
+  max-width: 34ch; margin: 0; color: #fff;
+  font-family: var(--display); font-weight: 500;
+  font-size: clamp(1.25rem, 2.15vw, 1.95rem); line-height: 1.24; letter-spacing: -.03em;
+}
+.stage-intro b { font-weight: 700; }
 .stage-list { list-style: none; margin: 0; padding: 0; text-align: right; }
 .stage-list li {
-  font-size: clamp(.875rem, 1.15vw, 1.0625rem); color: rgba(255,255,255,.76);
-  padding: .18rem 0; letter-spacing: -.01em;
+  font-family: var(--mono); font-size: clamp(.6875rem, .85vw, .8125rem);
+  letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.6);
+  padding: .3rem 0;
 }
 
 .stage-bottom { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: end; gap: 2.5rem; padding-bottom: clamp(1.5rem, 3vw, 2.5rem); }
@@ -1183,6 +1189,7 @@ ul.plain li::before { content: ""; position: absolute; left: 0; top: .74em; widt
 @media (max-width: 780px) {
   .stage-top { grid-template-columns: 1fr; gap: 1.1rem; }
   .stage-list { text-align: left; display: flex; flex-wrap: wrap; gap: .1rem 1rem; }
+  .stage-intro { font-size: clamp(1.15rem, 5.2vw, 1.5rem); max-width: none; }
   .stage-bottom { grid-template-columns: 1fr; align-items: start; gap: 1.25rem; }
   .stage-thumbs { justify-content: flex-start; }
   .stage-thumb { width: 68px; }
@@ -1191,6 +1198,11 @@ ul.plain li::before { content: ""; position: absolute; left: 0; top: .74em; widt
 
 /* nav sits over the stage until you scroll */
 .nav.over { background: transparent; border-bottom: 0; }
+.nav.over .brand { opacity: 0; transform: translateY(-6px); pointer-events: none; }
+/* but the open mobile menu needs it back, or the panel has a bald corner */
+.nav.over.open .brand { opacity: 1; transform: none; pointer-events: auto; }
+.nav.over.open { background: var(--band-dark); }
+.brand { transition: opacity .4s var(--ease), transform .4s var(--ease); }
 .nav.over::after { content: none; }
 
 /* ---------- statement marquee ---------- */

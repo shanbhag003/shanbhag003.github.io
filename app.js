@@ -242,9 +242,7 @@
         var head = row.querySelector(".row-head");
         if (!head) return;
 
-        head.addEventListener("click", function () {
-          open(row.classList.contains("open") && !canHover ? null : row);
-        });
+        head.addEventListener("click", function () { open(row); });
 
         /* keyboard users get the same reveal as they tab through */
         head.addEventListener("focus", function () { open(row); });
