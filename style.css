@@ -1421,3 +1421,28 @@ body.lb-open { overflow: hidden; }
 }
 
 
+
+/* ============================================================
+   CONTACT PILL — mobile only
+   Desktop hides it (see the nav grid block above). In the mobile
+   panel it's a full-width gold pill with a pulsing dot.
+   ============================================================ */
+
+.cta-dot {
+  width: 6px; height: 6px; border-radius: 50%; background: var(--paper);
+  flex: 0 0 auto; animation: pulse 2.8s var(--ease) infinite;
+}
+
+@media (max-width: 860px) {
+  .nav ul li.nav-cta { margin: 1rem 0 .35rem; }
+  .nav .nav-cta a {
+    display: inline-flex; align-items: center; justify-content: center; gap: .55rem;
+    width: 100%; padding: 1rem 1.2rem;
+    background: var(--gold); border: 1px solid var(--gold); border-radius: 999px;
+    color: var(--paper); font-family: var(--body); font-size: 1.0625rem; font-weight: 600;
+    border-bottom: 0;
+    transition: background .2s, color .2s;
+  }
+  .nav .nav-cta a::after { content: none; }
+  .nav .nav-cta a:active { background: #fff; }
+}
