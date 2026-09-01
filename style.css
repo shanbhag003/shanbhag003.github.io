@@ -1370,3 +1370,28 @@ body {
 body.lb-open { overflow: hidden; }
 
 @media (prefers-reduced-motion: reduce) { .lb-fig img { animation: none; } }
+
+/* ---------- row variant with no image: lines left, names right ---------- */
+.row-inner.cols { grid-template-columns: 1.1fr .9fr; }
+@media (max-width: 900px) { .row-inner.cols { grid-template-columns: 1fr; } }
+
+.lines-d { list-style: none; margin: 0; padding: 0; }
+.lines-d li {
+  font-size: 1rem; color: #c3c0b9; line-height: 1.5;
+  padding: .8rem 0; border-top: 1px solid #26262e;
+}
+.lines-d li:first-child { border-top: 0; padding-top: 0; }
+.lines-d li b { color: #fff; font-weight: 600; }
+
+/* client and event names, set the way each brand sets its own */
+.names-h {
+  font-family: var(--mono); font-size: .6875rem; letter-spacing: .12em;
+  text-transform: uppercase; color: var(--gold); margin: 0 0 .9rem;
+}
+.names { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .55rem 1.35rem; align-items: baseline; }
+.names li { color: #e4e1da; line-height: 1.15; transition: color .2s; }
+.names li:hover { color: var(--gold); }
+
+/* client wall on the gold band */
+.band-gold .cwall li { border-top-color: rgba(11,11,12,.16); color: var(--paper); }
+.band-gold .cwall li:hover { color: #fff; }
