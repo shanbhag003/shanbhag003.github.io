@@ -149,6 +149,66 @@
     draw();
   }
 
+  /* ---------- live model readout ----------
+     Pulls the forecast's own output file. If the request fails —
+     offline, CORS, repo renamed — the panel says so plainly rather
+     than sitting empty. */
+  var live = document.getElementById("live-pl");
+  if (live) {
+    var rowsEl = live.querySelector(".live-rows");
+    var whenEl = live.querySelector(".live-when");
+    var metaEl = live.querySelector(".live-meta");
+
+    var ago = function (iso) {
+      var then = new Date(iso), mins = Math.round((Date.now() - then) / 60000);
+      if (isNaN(mins)) return "recently";
+      if (mins < 90) return mins + " minutes ago";
+      var hrs = Math.round(mins / 60);
+      if (hrs < 36) return hrs + " hours ago";
+      return Math.round(hrs / 24) + " days ago";
+    };
+
+    var fail = function () {
+      live.classList.add("is-error");
+      whenEl.textContent = "Couldn't reach the model just now";
+      metaEl.textContent = "";
+      rowsEl.innerHTML = "";
+    };
+
+    fetch(live.getAttribute("data-src"), { cache: "no-store" })
+      .then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function (d) {
+        var teams = (d.teams || []).slice(0, 6);
+        if (!teams.length) return fail();
+
+        whenEl.textContent = "Refreshed " + ago(d.updated_utc);
+        metaEl.textContent = [
+          d.label || ("Gameweek " + d.gameweek),
+          (d.n_sims ? d.n_sims.toLocaleString() + " simulations" : ""),
+          "title probability"
+        ].filter(Boolean).join(" · ");
+
+        var max = Math.max.apply(null, teams.map(function (t) { return t.title || 0; })) || 1;
+        rowsEl.innerHTML = teams.map(function (t) {
+          var pct = ((t.title || 0) * 100);
+          return '<li><span class="live-pos">' + t.pos + '</span>' +
+                 '<span class="live-team"></span>' +
+                 '<span class="live-bar"><i data-w="' + ((t.title || 0) / max * 100) + '"></i></span>' +
+                 '<span class="live-val">' + pct.toFixed(1) + '%</span></li>';
+        }).join("");
+        /* team names set via textContent so nothing from the feed is ever parsed as HTML */
+        Array.prototype.forEach.call(rowsEl.querySelectorAll(".live-team"), function (el, i) {
+          el.textContent = teams[i].team;
+        });
+        requestAnimationFrame(function () {
+          Array.prototype.forEach.call(rowsEl.querySelectorAll(".live-bar i"), function (el) {
+            el.style.width = el.getAttribute("data-w") + "%";
+          });
+        });
+      })
+      .catch(fail);
+  }
+
   /* ---------- project rail scroll-spy ----------
      Plain anchor links, so they work with JavaScript off. This only
      adds the active state as you scroll past each case. */
