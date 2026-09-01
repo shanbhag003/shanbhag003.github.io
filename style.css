@@ -1198,7 +1198,9 @@ ul.plain li::before { content: ""; position: absolute; left: 0; top: .74em; widt
 /* nav sits over the stage until you scroll */
 .nav.over { background: transparent; border-bottom: 0; }
 @media (min-width: 681px) {
-  .nav.over ul { flex: 1 1 auto; justify-content: space-between; margin-left: 0; }
+  .nav.over .brand { position: absolute; left: var(--gut); top: 50%; transform: translateY(-50%); }
+  .nav.over .wrap { position: relative; }
+  .nav.over ul { flex: 1 1 100%; justify-content: space-between; margin: 0; }
 }
 .nav.over .brand { opacity: 0; transform: translateY(-6px); pointer-events: none; }
 /* but the open mobile menu needs it back, or the panel has a bald corner */
