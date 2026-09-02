@@ -248,7 +248,7 @@ section.band-dark + section { border-top: 0; }
 
 .prail {
   position: sticky; top: var(--nav-h); z-index: 30;
-  background: rgba(247,246,243,.94); backdrop-filter: blur(14px);
+  background: rgba(247,246,243,.94); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--line);
 }
 .prail .wrap { padding-top: .85rem; padding-bottom: .85rem; overflow-x: auto; scrollbar-width: none; }
@@ -1080,9 +1080,11 @@ ul.plain li::before { content: ""; position: absolute; left: 0; top: .74em; widt
 .row.open .row-ico::after { transform: rotate(90deg); opacity: 0; }
 
 /* the expanding panel */
-.row-body { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .45s var(--ease); }
-.row.open .row-body { grid-template-rows: 1fr; }
-.row-body > div { overflow: hidden; }
+.row-body > div {
+  max-height: 0; overflow: hidden;
+  transition: max-height .5s var(--ease);
+}
+.row.open .row-body > div { max-height: 2000px; }
 .row-inner {
   display: grid; grid-template-columns: 22rem 1fr; gap: clamp(1.5rem, 3vw, 2.75rem);
   padding: 0 0 2rem; align-items: start;
@@ -1123,7 +1125,7 @@ ul.plain li::before { content: ""; position: absolute; left: 0; top: .74em; widt
    ============================================================ */
 
 .stage {
-  position: relative; min-height: 100svh; min-height: 100vh;
+  position: relative; min-height: 100vh; min-height: 100svh;
   display: flex; flex-direction: column; justify-content: space-between;
   overflow: hidden; background: #07070a; color: #fff;
   margin-top: calc(-1 * var(--nav-h)); padding-top: var(--nav-h);
@@ -1345,7 +1347,7 @@ body {
   position: fixed; inset: 0; z-index: 10000; display: none;
   align-items: center; justify-content: center;
   padding: clamp(1rem, 4vw, 3rem);
-  background: rgba(7,7,10,.95); backdrop-filter: blur(6px);
+  background: rgba(7,7,10,.95); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
 }
 .lb.on { display: flex; }
 .lb-fig { margin: 0; max-width: 100%; max-height: 100%; display: flex; flex-direction: column; gap: .85rem; }

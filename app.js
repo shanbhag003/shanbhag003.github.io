@@ -202,7 +202,9 @@
     var close = function () {
       lb.classList.remove("on");
       document.body.classList.remove("lb-open");
+      document.body.style.position = "";
       document.body.style.top = "";
+      document.body.style.width = "";
       window.scrollTo(0, scrollY);
       lbImg.removeAttribute("src");
       if (opener) { opener.focus({ preventScroll: true }); opener = null; }
@@ -216,6 +218,10 @@
       lbCap.textContent = im.alt;
       lb.classList.add("on");
       document.body.classList.add("lb-open");
+      /* iOS needs the body pinned, not just overflow:hidden */
+      document.body.style.position = "fixed";
+      document.body.style.top = -scrollY + "px";
+      document.body.style.width = "100%";
       lbClose.focus({ preventScroll: true });
     };
 
