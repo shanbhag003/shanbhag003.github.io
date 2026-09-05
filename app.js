@@ -159,9 +159,10 @@
        screen — so they arrive one at a time rather than all at once */
     var tl = new IntersectionObserver(function (entries) {
       entries.forEach(function (e) {
-        if (e.isIntersecting) { e.target.classList.add("in"); tl.unobserve(e.target); }
+        /* toggle, don't unobserve — scrolling back up replays the reveal */
+        e.target.classList.toggle("in", e.isIntersecting);
       });
-    }, { rootMargin: "0px 0px -42% 0px", threshold: 0 });
+    }, { rootMargin: "-8% 0px -38% 0px", threshold: 0 });
 
     Array.prototype.forEach.call(targets, function (el) {
       if (el.matches(".tl-row, .tl-yr")) { tl.observe(el); return; }

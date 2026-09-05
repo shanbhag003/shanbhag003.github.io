@@ -1451,34 +1451,52 @@ body.lb-open { overflow: hidden; }
 
 /* ============================================================
    EVENT TIMELINE (experience)
-   One event per full-width row, newest first. Each row reveals
-   as it scrolls into view, so they arrive one at a time.
+   One month per row, newest first. Months with two events show the
+   month once and both events together. Rows fade in and out as they
+   cross the middle of the screen, in either scroll direction.
    ============================================================ */
 
-.tl { margin-top: 2.5rem; border-top: 1px solid var(--line); }
+.tl { margin-top: 2.75rem; border-top: 1px solid var(--line-2); }
+
 .tl-yr {
-  font-family: var(--mono); font-size: .8125rem; letter-spacing: .12em;
-  color: var(--gold-deep); padding: 1.9rem 0 .5rem; margin: 0;
+  font-family: var(--display); font-weight: 700;
+  font-size: clamp(1.6rem, 3.4vw, 2.6rem); letter-spacing: -.04em;
+  color: var(--gold-deep); margin: 0; padding: 2.4rem 0 .4rem;
 }
+
 .tl-row {
-  display: grid; grid-template-columns: 9rem 1fr auto;
+  display: grid; grid-template-columns: 11rem 1fr;
   gap: clamp(1rem, 3vw, 2.5rem); align-items: baseline;
-  padding: clamp(1.5rem, 3.2vw, 2.6rem) 0; border-bottom: 1px solid var(--line);
+  padding: clamp(1.4rem, 2.8vw, 2.2rem) 0; border-bottom: 1px solid var(--line);
 }
 .tl-when {
-  font-family: var(--mono); font-size: .8125rem; text-transform: uppercase;
-  color: var(--muted-2); letter-spacing: .04em;
-}
-.tl-event {
   font-family: var(--display); font-weight: 600;
-  font-size: clamp(1.15rem, 2.6vw, 2rem); letter-spacing: -.035em; line-height: 1.1;
+  font-size: clamp(1rem, 1.5vw, 1.2rem); letter-spacing: -.02em;
   color: var(--paper);
 }
-.tl-note { font-family: var(--mono); font-size: .6875rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted-2); white-space: nowrap; }
+
+.tl-events { display: flex; flex-direction: column; gap: .55rem; }
+.tl-line { display: block; }
+/* base sets size and colour; the ev-* modifiers carry each brand's own
+   typographic treatment, the same system as the client wall */
+.tl-event { font-size: clamp(1.2rem, 2.7vw, 2.05rem); line-height: 1.12; color: var(--paper); }
+.ev-a { font-family: var(--display); font-weight: 700; letter-spacing: -.042em; }
+.ev-b { font-family: var(--mono); font-weight: 500; letter-spacing: .07em; text-transform: uppercase; font-size: clamp(.95rem, 2vw, 1.5rem); }
+.ev-c { font-family: var(--display); font-weight: 600; letter-spacing: .005em; text-transform: uppercase; font-size: clamp(1.05rem, 2.35vw, 1.78rem); }
+.ev-d { font-family: var(--body); font-weight: 500; letter-spacing: -.02em; }
+.ev-e { font-family: var(--display); font-weight: 400; font-style: italic; letter-spacing: -.015em; }
+.ev-f { font-family: var(--mono); font-weight: 400; letter-spacing: .02em; font-size: clamp(.95rem, 1.95vw, 1.42rem); }
+.tl-kind {
+  font-family: var(--body); font-style: italic; font-weight: 500;
+  font-size: clamp(.9rem, 1.5vw, 1.15rem); color: var(--gold-deep);
+  letter-spacing: -.01em; margin-left: .35rem; white-space: nowrap;
+}
 
 @media (max-width: 680px) {
-  .tl-row { grid-template-columns: 1fr; gap: .3rem; padding: 1.1rem 0; }
-  .tl-note { white-space: normal; }
+  .tl-row { grid-template-columns: 1fr; gap: .45rem; padding: 1.25rem 0; }
+  .tl-yr { font-size: 1.5rem; padding-top: 1.9rem; }
+  .tl-kind { display: inline-block; margin-left: .3rem; }
 }
+
 .ilink-d { color: var(--gold-deep); text-decoration: none; border-bottom: 1px solid rgba(138,109,16,.4); }
 .ilink-d:hover { border-bottom-color: var(--gold-deep); }
