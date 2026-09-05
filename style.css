@@ -1475,8 +1475,16 @@ body.lb-open { overflow: hidden; }
   color: var(--paper);
 }
 
-.tl-events { display: flex; flex-direction: column; gap: .55rem; }
-.tl-line { display: block; }
+.tl-events { display: flex; flex-direction: column; gap: .7rem; }
+
+/* event and its auction/draft on the left, sport pinned right */
+.tl-line { display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; align-items: baseline; }
+.tl-name { min-width: 0; }
+.tl-sport {
+  font-family: var(--mono); font-size: .6875rem; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--paper); background: rgba(138,109,16,.14);
+  padding: .34rem .6rem; border-radius: 5px; white-space: nowrap; align-self: center;
+}
 /* base sets size and colour; the ev-* modifiers carry each brand's own
    typographic treatment, the same system as the client wall */
 .tl-event { font-size: clamp(1.2rem, 2.7vw, 2.05rem); line-height: 1.12; color: var(--paper); }
@@ -1496,7 +1504,17 @@ body.lb-open { overflow: hidden; }
   .tl-row { grid-template-columns: 1fr; gap: .45rem; padding: 1.25rem 0; }
   .tl-yr { font-size: 1.5rem; padding-top: 1.9rem; }
   .tl-kind { display: inline-block; margin-left: .3rem; }
+  /* the sport drops under the event rather than squeezing beside it */
+  .tl-line { grid-template-columns: 1fr; gap: .45rem; }
+  .tl-sport { justify-self: start; }
 }
+
+/* older years stay collapsed until asked for — the list is long */
+.tl-more { display: none; }
+.tl.show-all .tl-more { display: grid; }
+.tl.show-all p.tl-more { display: block; }
+.tl-toggle-wrap { margin-top: 2rem; }
+.tl-toggle { cursor: pointer; }
 
 .ilink-d { color: var(--gold-deep); text-decoration: none; border-bottom: 1px solid rgba(138,109,16,.4); }
 .ilink-d:hover { border-bottom-color: var(--gold-deep); }

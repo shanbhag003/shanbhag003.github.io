@@ -297,6 +297,21 @@
     window.addEventListener("resize", solid);
   }
 
+  /* ---------- timeline: show earlier years ----------
+     Everything is in the DOM for crawlers; the older years are just
+     collapsed so the page isn't an endless scroll. */
+  (function () {
+    var tlEl = document.querySelector(".tl");
+    var btn = document.querySelector(".tl-toggle");
+    if (!tlEl || !btn) return;
+    btn.addEventListener("click", function () {
+      var open = tlEl.classList.toggle("show-all");
+      btn.setAttribute("aria-expanded", open ? "true" : "false");
+      btn.textContent = open ? "Hide earlier years" : "Show earlier years, 2024 to 2022";
+      if (!open) tlEl.scrollIntoView({ block: "start", behavior: "smooth" });
+    });
+  })();
+
   /* ---------- accordion rows ----------
      One open at a time. On a mouse the row opens as you move onto it
      and the previous one collapses; click and keyboard still work, and
