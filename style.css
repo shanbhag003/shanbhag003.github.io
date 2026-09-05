@@ -1448,3 +1448,37 @@ body.lb-open { overflow: hidden; }
   .nav .nav-cta a::after { content: none; }
   .nav .nav-cta a:active { background: #fff; }
 }
+
+/* ============================================================
+   EVENT TIMELINE (experience)
+   One event per full-width row, newest first. Each row reveals
+   as it scrolls into view, so they arrive one at a time.
+   ============================================================ */
+
+.tl { margin-top: 2.5rem; border-top: 1px solid var(--line); }
+.tl-yr {
+  font-family: var(--mono); font-size: .8125rem; letter-spacing: .12em;
+  color: var(--gold-deep); padding: 1.9rem 0 .5rem; margin: 0;
+}
+.tl-row {
+  display: grid; grid-template-columns: 9rem 1fr auto;
+  gap: clamp(1rem, 3vw, 2.5rem); align-items: baseline;
+  padding: clamp(1.5rem, 3.2vw, 2.6rem) 0; border-bottom: 1px solid var(--line);
+}
+.tl-when {
+  font-family: var(--mono); font-size: .8125rem; text-transform: uppercase;
+  color: var(--muted-2); letter-spacing: .04em;
+}
+.tl-event {
+  font-family: var(--display); font-weight: 600;
+  font-size: clamp(1.15rem, 2.6vw, 2rem); letter-spacing: -.035em; line-height: 1.1;
+  color: var(--paper);
+}
+.tl-note { font-family: var(--mono); font-size: .6875rem; letter-spacing: .08em; text-transform: uppercase; color: var(--muted-2); white-space: nowrap; }
+
+@media (max-width: 680px) {
+  .tl-row { grid-template-columns: 1fr; gap: .3rem; padding: 1.1rem 0; }
+  .tl-note { white-space: normal; }
+}
+.ilink-d { color: var(--gold-deep); text-decoration: none; border-bottom: 1px solid rgba(138,109,16,.4); }
+.ilink-d:hover { border-bottom-color: var(--gold-deep); }

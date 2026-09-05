@@ -117,19 +117,25 @@
      rather than element by element. A failsafe reveals everything
      regardless, so content can never be stranded at opacity 0. */
   var targets = document.querySelectorAll(".reveal");
-  var showAll = function () {
+  var showAll = function (includeTimeline) {
     Array.prototype.forEach.call(targets, function (el) {
+      if (!includeTimeline && el.matches(".tl-row, .tl-yr")) return;
       el.style.transitionDelay = "";
       el.classList.add("in");
     });
   };
 
   if (reduce || !("IntersectionObserver" in window)) {
-    showAll();
+    showAll(true);
   } else {
     var blocks = document.querySelectorAll("main > section, main > header, .case, footer");
+    /* timeline rows reveal individually so they arrive one at a time */
+    var solo = document.querySelectorAll(".tl-row, .tl-yr");
     var revealBlock = function (block) {
-      var kids = block.querySelectorAll(".reveal");
+      var kids = Array.prototype.filter.call(
+        block.querySelectorAll(".reveal"),
+        function (el) { return !el.matches(".tl-row, .tl-yr"); }
+      );
       Array.prototype.forEach.call(kids, function (el, i) {
         el.style.transitionDelay = Math.min(i * 90, 540) + "ms";
         el.classList.add("in");
@@ -149,12 +155,21 @@
         if (e.isIntersecting) { e.target.classList.add("in"); loose.unobserve(e.target); }
       });
     }, { rootMargin: "0px 0px -40px 0px", threshold: 0 });
+    /* timeline rows fire later — only once they cross the middle of the
+       screen — so they arrive one at a time rather than all at once */
+    var tl = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) { e.target.classList.add("in"); tl.unobserve(e.target); }
+      });
+    }, { rootMargin: "0px 0px -42% 0px", threshold: 0 });
+
     Array.prototype.forEach.call(targets, function (el) {
+      if (el.matches(".tl-row, .tl-yr")) { tl.observe(el); return; }
       if (!el.closest("main > section, main > header, .case, footer")) loose.observe(el);
     });
 
-    setTimeout(showAll, 3000);
-    window.addEventListener("pageshow", function (e) { if (e.persisted) showAll(); });
+    setTimeout(function () { showAll(false); }, 3000);
+    window.addEventListener("pageshow", function (e) { if (e.persisted) showAll(true); });
   }
 
   /* ---------- scroll progress ---------- */
