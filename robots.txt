@@ -1,2 +1,4 @@
 User-agent: *
 Allow: /
+
+Sitemap: https://shanbhag003.com/sitemap.xml
