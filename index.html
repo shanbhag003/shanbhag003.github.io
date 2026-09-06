@@ -113,9 +113,9 @@
 
 <section class="stage" id="stage">
   <div class="stage-bg" aria-hidden="true">
-    <img src="assets/stage-1.jpg" alt="" class="on" width="1600" height="900">
-    <img src="assets/stage-2.jpg" alt="" width="1600" height="900">
-    <img src="assets/stage-3.jpg" alt="" width="1600" height="900">
+    <img src="assets/stage-1.jpg" alt="" class="on" width="1600" height="900" fetchpriority="high" decoding="async">
+    <img src="assets/stage-2.jpg" alt="" width="1600" height="900" loading="lazy" decoding="async">
+    <img src="assets/stage-3.jpg" alt="" width="1600" height="900" loading="lazy" decoding="async">
   </div>
 
   <div class="wrap stage-top">
@@ -301,6 +301,7 @@
   </div>
 </footer>
 
+<script src="analytics.js" defer></script>
 <script src="app.js" defer></script>
 </body>
 </html>
