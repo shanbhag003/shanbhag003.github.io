@@ -10,8 +10,8 @@
               Setup → the id in the snippet, looks like abcd1234ef
    ============================================================ */
 
-var GA4_ID     = "G-BSXKZS65WF";   //  e.g. "G-ABC123XYZ"
-var CLARITY_ID = "ydxxpsmjfa";   //  e.g. "abcd1234ef"
+var GA4_ID     = "";   //  e.g. "G-ABC123XYZ"
+var CLARITY_ID = "";   //  e.g. "abcd1234ef"
 
 (function () {
   "use strict";

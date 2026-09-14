@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Projects — Kartik Shanbhag</title>
-<meta name="description" content="Three systems Kartik Shanbhag designed, built and deployed alone: a self-updating Premier League forecast, a live cricket digest, and an autonomous FPL manager. Live links, public code, and the experiments that failed.">
+<meta name="description" content="Four systems Kartik Shanbhag designed, built and deployed alone: a football scouting tool, a self-updating Premier League forecast, a live cricket digest, and an autonomous FPL manager. Live links, public code, and the experiments that failed.">
 <meta name="theme-color" content="#fcfcfd">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Projects — Kartik Shanbhag">
-<meta property="og:description" content="Three systems Kartik Shanbhag designed, built and deployed alone: a self-updating Premier League forecast, a live cricket digest, and an autonomous FPL manager. Live links, public code, and the experiments that failed.">
+<meta property="og:description" content="Four systems Kartik Shanbhag designed, built and deployed alone: a football scouting tool, a self-updating Premier League forecast, a live cricket digest, and an autonomous FPL manager. Live links, public code, and the experiments that failed.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -71,7 +71,8 @@
   <div class="wrap">
     <div class="prail-track">
       <span class="prail-ind" aria-hidden="true"></span>
-      <a href="#pl-supercomputer" aria-current="true">PL Supercomputer</a>
+      <a href="#player-scout" aria-current="true">Player Scout</a>
+      <a href="#pl-supercomputer">PL Supercomputer</a>
       <a href="#cricket-digest">Cricket AI Digest</a>
       <a href="#fpl">FPL Auto Manager</a>
     </div>
@@ -79,7 +80,57 @@
 </nav>
 
 <!-- ================= 01 ================= -->
-<section class="case band-dark" id="pl-supercomputer">
+<section class="case band-dark" id="player-scout">
+  <div class="wrap case-grid">
+    <div class="case-media reveal">
+      <span class="screen">
+        <span class="screen-bar"><span class="live-dot"></span><span>shanbhag003.github.io/player-scout</span></span>
+        <span class="screen-img"><img src="assets/proj-scout.jpg" alt="Player Scout ranking the ten closest players to Rayan Cherki, each row carrying a match score, a shared trait and the two biggest differences." width="900" height="625" loading="lazy"></span>
+      </span>
+      <figure class="diagram">
+        <img src="assets/scout-profile.jpg" alt="A player profile: percentile radar against every attacking midfielder in the pool, with per-90 figures and percentiles for all fourteen metrics." width="1200" height="833" loading="lazy">
+        <figcaption>Every player is ranked against his own position, not the whole pool.</figcaption>
+      </figure>
+    </div>
+
+    <div class="case-body">
+      <h2 class="reveal">Player Scout</h2>
+      <p class="stackline reveal">Python · Principal component analysis · GitHub Actions</p>
+      <p class="lede reveal">Name a footballer you already have a view on. It finds who else plays like him across five seasons of the big five leagues, and tells you where the two of them differ.</p>
+
+      <div class="metrics reveal">
+        <div class="metric"><span class="mval">3,245</span><span class="mlab">Players in the pool</span><span class="mnote">13,980 player-seasons, 2021/22 to 2025/26</span></div>
+        <div class="metric"><span class="mval">98.6%</span><span class="mlab">Records matched across three sources that share no identifier</span><span class="mnote">99.9% above 900 minutes</span></div>
+        <div class="metric"><span class="mval">18th</span><span class="mlab">Where the tool ranks a player against his own later self, of 161</span><span class="mnote">Chance would be 81st</span></div>
+        <div class="metric"><span class="mval">624</span><span class="mlab">Players who changed league, used to fit the league adjustment</span><span class="mnote">The same person measured before and after a move</span></div>
+      </div>
+
+      <div class="note reveal">
+        <p class="eyebrow">The decision I'd defend</p>
+        <p>Pressing intensity is one number describing eleven people. Attach it to an individual and everyone at the same club starts to look alike. It's shown as context on the profile and <strong>kept out of the similarity model entirely</strong> — and the panel says so, rather than letting you assume otherwise.</p>
+      </div>
+
+      <div class="rejected reveal">
+        <p class="eyebrow">What it cannot see, stated on the page itself</p>
+        <ul class="rej-list">
+          <li><s>Goalkeeper rankings</s><span>57th of 160 against a chance of 80 — close to random, so they aren't ranked at all</span></li>
+          <li><s>Defensive actions</s><span>No tackles, interceptions or duels in the data, so defenders are compared going forward only</span></li>
+          <li><s>Keeping 80% of variance</s><span>Cost real accuracy; right wingers went from 23rd to 34th. The threshold was set by testing, not convention</span></li>
+        </ul>
+        <p>Every player is split into his early and later seasons and handed to the tool as two strangers. If it can't recognise a man as his own closest match, it can't recognise anything.</p>
+      </div>
+
+      <div class="actions reveal">
+        <a class="btn btn-live" href="https://shanbhag003.github.io/player-scout/" target="_blank" rel="noopener noreferrer">Try it</a>
+        <a class="btn" href="https://github.com/shanbhag003/player-scout" target="_blank" rel="noopener noreferrer">Code</a>
+        <a class="btn" href="https://github.com/shanbhag003/player-scout/blob/main/README.md" target="_blank" rel="noopener noreferrer">Full method</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= 02 ================= -->
+<section class="case band-dark alt" id="pl-supercomputer">
   <div class="wrap case-grid">
     <div class="case-media reveal">
       <span class="screen">
@@ -125,7 +176,7 @@
 </section>
 
 <!-- ================= 02 ================= -->
-<section class="case band-dark alt flip" id="cricket-digest">
+<section class="case band-dark flip" id="cricket-digest">
   <div class="wrap case-grid">
     <div class="case-media reveal">
       <span class="screen">
@@ -164,7 +215,7 @@
 </section>
 
 <!-- ================= 03 ================= -->
-<section class="case band-dark" id="fpl">
+<section class="case band-dark alt" id="fpl">
   <div class="wrap case-grid">
     <div class="case-media reveal">
       <span class="screen">

@@ -307,6 +307,8 @@ section.band-dark + section { border-top: 0; }
 .screen-bar span { overflow: hidden; text-overflow: ellipsis; }
 .screen-bar .live-dot { flex: 0 0 auto; width: 6px; height: 6px; border-radius: 50%; background: #4ade80; animation: pulse 2.8s var(--ease) infinite; }
 .screen-img { display: block; aspect-ratio: 4 / 5; background: #08080b; }
+/* landscape captures shouldn't float in a portrait frame */
+.screen-img.wide { aspect-ratio: 16 / 11; }
 .screen-img img { width: 100%; height: 100%; object-fit: contain; }
 
 .case-body > h2 { font-size: clamp(2.1rem, 4.4vw, 3.4rem); letter-spacing: -.04em; line-height: 1.02; margin-bottom: .9rem; }
@@ -718,7 +720,7 @@ ul.plain li::before { content: ""; position: absolute; left: 0; top: .74em; widt
    either being mangled.
    ============================================================ */
 
-.pcards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
+.pcards { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
 
 .pcard {
   display: flex; flex-direction: column; text-decoration: none;

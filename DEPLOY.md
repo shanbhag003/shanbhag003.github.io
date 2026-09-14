@@ -1,197 +1,147 @@
-# Deploying shanbhag003.com
+# shanbhag003.com — deploy and SEO
 
-No local environment needed. No build step, no npm, no framework. This is plain
-HTML and CSS — the browser is the only thing that runs it.
-
-**Why I dropped the Astro plan:** you already run two GitHub Pages sites
-successfully. Adding a build step would mean node_modules, build failures you
-can't debug locally, and a framework upgrade treadmill — all to render five
-pages. Static files give you identical SEO, faster loads, and nothing that can
-break in eighteen months. If you later want fifty articles, we revisit it.
+Total cost: **one domain, about ₹1,000–1,200 a year.** Hosting, SSL and
+bandwidth are free at your traffic levels.
 
 ---
 
-## Step 1 — Create the repository
+## Part 1 — Buy the domain
 
-1. Go to <https://github.com/new>
-2. Repository name: **`shanbhag003.github.io`** — this exact name matters, it's
-   what makes GitHub serve it as your root site
-3. Set it to **Public**
-4. Don't add a README or .gitignore
-5. Click **Create repository**
+1. Sign up at **dash.cloudflare.com** (free account).
+2. Left sidebar → **Domain Registration** → **Register Domain**.
+3. Search `shanbhag003` and buy the `.com`.
+4. Turn **auto-renew ON**. A lapsed portfolio domain is quickly taken.
 
-## Step 2 — Upload the files
+Cloudflare sells at wholesale with no renewal markup — the price in year one is
+the price in year five. Skip every add-on offered at checkout.
 
-1. On the empty repo page, click **uploading an existing file**
-2. Unzip `shanbhag003-site.zip` on your computer
-3. Drag in **the contents** of the folder, not the folder itself. You should be
-   dragging: `index.html`, `projects.html`, `experience.html`, `articles.html`,
-   `visualisations.html`, `style.css`, `robots.txt`, `sitemap.xml`, `CNAME`,
-   `.nojekyll`, and the `assets` folder
-3. Commit message: `Initial site`
-4. Click **Commit changes**
-
-**If `.nojekyll` won't upload** (some browsers hide dotfiles): in the repo, click
-**Add file → Create new file**, name it `.nojekyll`, leave it empty, commit. It
-stops GitHub running Jekyll over your files, which can otherwise mangle
-directories starting with an underscore.
-
-## Step 3 — Turn on Pages
-
-1. Repo → **Settings** → **Pages** (left sidebar)
-2. Source: **Deploy from a branch**
-3. Branch: **main**, folder: **/ (root)** → **Save**
-4. Wait about a minute. Your site is live at `https://shanbhag003.github.io`
-
-Check it works before touching the domain.
-
-## Step 4 — Point a domain at it (later)
-
-The repo has **no CNAME file and no canonical tags**, on purpose — a canonical
-pointing at a domain you don't own yet is worse than none at all. The site runs
-happily at `shanbhag003.github.io` until you buy one.
-
-When you do have a domain, tell me and I'll add the canonical tags, the OG
-URLs, a real `sitemap.xml` and the CNAME in one pass. If you go the Cloudflare
-route, Cloudflare Pages can build straight from this repo and you skip the DNS
-records below entirely.
-
-<details><summary>DNS records, for when you're ready</summary>
-
-First buy the domain if you haven't. Cloudflare Registrar sells at cost with no
-renewal markup; Namecheap and Porkbun are also fine. Avoid GoDaddy's upsells.
-
-Then, at your registrar's DNS settings, create these records:
-
-| Type | Name | Value |
-|---|---|---|
-| A | `@` | `185.199.108.153` |
-| A | `@` | `185.199.109.153` |
-| A | `@` | `185.199.110.153` |
-| A | `@` | `185.199.111.153` |
-| CNAME | `www` | `shanbhag003.github.io` |
-
-All four A records. GitHub uses all four for redundancy.
-
-Then back in **Settings → Pages → Custom domain**, enter `shanbhag003.com` and
-save. The `CNAME` file in the repo already contains this, so it should
-pre-populate.
-
-</details>
-
-Wait for the DNS check to pass — anywhere from ten minutes to a few hours — then
-tick **Enforce HTTPS**. Don't skip that; without it the site serves over plain
-HTTP and browsers will flag it.
-
-## Step 5 — Editing later, still with no local setup
-
-On any file in your repo, press the **`.`** key. GitHub opens a full VS Code in
-your browser. Edit, then commit from the sidebar. The site redeploys itself in
-about forty seconds.
-
-Same trick works on `github.dev` if you prefer the URL.
+**Also buy `kartikshanbhag.com`** and point it at the same site. Recruiters
+search your name, not your handle. Setup is in Part 4.
 
 ---
 
-## What's in the build
+## Part 2 — Put the code on GitHub
 
-```
-index.html            home — hero, three claims, client list
-projects.html         three case studies as tabbed sub-sections; deep
-                      links work: #pl-supercomputer, #cricket-digest, #fpl
-experience.html       capability blocks, then the full month-by-month log
-articles.html         five pieces, currently linking to Medium
-visualisations.html   seven Tableau dashboards
-style.css             the whole design system, one file
-app.js                scroll reveal, progress bar, project tabs
-sitemap.xml           empty until the domain exists
-robots.txt            points at the sitemap
-.nojekyll             stops GitHub post-processing the files
-assets/               portrait, cricket console screenshot, résumé PDF
-```
+If your repo already exists, upload this build over it and skip to Part 3.
 
-## Design decisions, so you can argue with them
+1. github.com/new → name it `shanbhag003` → **Public** → Create.
+2. **uploading an existing file** → drag in the *contents* of this folder, not
+   the folder itself.
+3. Commit.
 
-**Colour banding.** The page alternates grounds rather than running as one
-white sheet: a dark header, white content sections, a tinted band for the
-client marquee, and a dark feature band before the footer. The footer closes on
-the same dark as the header, so the page is bookended.
-
-**Palette** is paper-white with two accents, each carrying a fixed meaning I
-never break.
-- **Blue `#2563EB`** — action and primary. Buttons, active tabs, the scroll
-  progress line, and the border on the "rejected" ledgers.
-- **Ochre `#B45309`** — measured, validated, numeric. Winning rows in tables,
-  client attributions, verified claims.
-
-Every text-on-background pair used anywhere on the site was contrast-checked;
-the lowest is 4.77:1 against a WCAG AA floor of 4.5:1.
-
-That mapping encodes something true rather than decorating. When you see mint,
-a number has been checked.
-
-**Type** is three faces doing three jobs:
-- **Instrument Sans** for headings — a tight contemporary grotesque, not Inter,
-  which every developer portfolio uses
-- **Geist** for body text — Vercel's typeface, designed for screen reading and
-  currently the default choice on modern product sites
-- **Geist Mono** for labels, tables and buttons — the vernacular of the
-  operations consoles you actually build
-
-**The client marquee** drifts left to right continuously and pauses on hover.
-Each client is set in a different weight, case and tracking so the row reads as
-a set of wordmarks rather than identical chips. These are typographic
-treatments only — no real logos are used, which keeps you clear of any
-trademark question about reproducing brand marks on a personal site.
-
-**The signature element** is the bordered **rejected ledger** on the projects
-page — nobody else publishes their failed experiments, so it gets the loudest
-treatment on the site.
-
-**Mobile.** Tested by rendering every page at 430, 390, 360 and 320px. No
-horizontal scroll anywhere. The sticky header becomes two rows on narrow
-screens — brand, then the nav — and its height is measured at runtime into a
-`--nav-h` variable that the project sub-nav and every anchor offset read from,
-so the tab bar can never end up hidden behind the header. All five nav links
-fit without scrolling down to 360px; below that the row scrolls with a fade on
-the right edge. Wide data tables scroll horizontally inside their own container,
-also with an edge fade, so it's obvious there's more to see. Every tap target
-clears 44px, hover lifts are disabled on touch devices, and buttons go full width so they never orphan.
-
-**Accessibility floor:** responsive to 320px, visible keyboard focus rings,
-`prefers-reduced-motion` respected, skip link, semantic headings, real alt text,
-tabs wired with `role="tab"`/`aria-selected` and arrow-key navigation.
+**`.nojekyll` will not upload by drag-and-drop** — browsers hide dotfiles. Use
+**Add file → Create new file**, name it `.nojekyll`, leave it empty, commit.
 
 ---
 
-## Things you need to fix or decide
+## Part 3 — Connect Cloudflare Pages
 
-1. **Your LinkedIn URL is a guess.** I used
-   `linkedin.com/in/shanbhag003/` in all four footers. If that's wrong, find and
-   replace it across the five HTML files.
+1. Cloudflare dashboard → **Workers & Pages** → **Create** → **Pages** →
+   **Connect to Git**.
+2. Authorise GitHub, pick the repo.
+3. Build settings — this matters:
+   - Framework preset: **None**
+   - Build command: **leave empty**
+   - Build output directory: **/**
+4. **Save and Deploy.** About 30 seconds. You get a `*.pages.dev` URL.
+5. Check that URL works before touching the domain.
 
-2. **The five-hour / three-hour discrepancy.** Your PL Supercomputer live page
-   says it republishes three hours after a gameweek; the README says five. The
-   site copy currently avoids the number entirely ("a set delay has passed").
-   Reconcile the two sources and I'll put the real figure in.
+Every future commit redeploys automatically.
 
-3. **The articles aren't actually moved yet.** I don't have the article bodies —
-   they're only on Medium. The page links out for now. To genuinely move them,
-   paste me the text of each and I'll build five article pages with canonical
-   tags pointing here.
+---
 
-4. **Three dashboards have placeholder descriptions.** Manchester City 2021,
-   Sergio Busquets and Premier League 2024/25 have generic one-liners because I
-   don't know what question each answers. Send me one line each.
+## Part 4 — Point the domain at it
 
-5. **The Tata Motors line is a placeholder.** I would not invent a job history.
-   The description on the Experience page is written from your instruction, not
-   from anything you've told me you did. Confirm it or replace it — there is an
-   HTML comment marking the spot.
+1. Pages project → **Custom domains** → **Set up a custom domain**.
+2. Enter `shanbhag003.com` → **Activate domain**.
+3. Repeat for `www.shanbhag003.com`.
 
-6. **No OG image yet.** Link previews will show text only. A single
-   1200×630 image would fix it across every page; a per-page set would be
-   better. Say the word and I'll generate them.
+Because the domain is registered at Cloudflare, DNS is created for you. No A
+records, no CNAME file — that's why there isn't one in this build. HTTPS is
+issued automatically within minutes.
 
-7. **The résumé PDF still has percentages in it.** The site has none, by your
-   instruction, but the downloadable résumé contradicts that. Worth aligning.
+**For `kartikshanbhag.com`:** add it as a second custom domain on the same
+project. Both serve the site; the canonical tags tell Google `shanbhag003.com`
+is the original, so there's no duplicate-content problem.
+
+---
+
+## Part 5 — SEO, so "Kartik Shanbhag" finds you
+
+### Already built in
+
+- **Your name is now the H1** on the home page. It used to be the `shanbhag003`
+  wordmark — the strongest on-page signal, spent on a handle instead of a name.
+- **Person structured data**: your name, alternate name, role, employer, city,
+  universities, subject areas, and every profile you own. This is what lets
+  Google connect the site to *you* rather than treating it as an unrelated page.
+- **Canonical URLs** on all five pages.
+- **Per-page social cards** at 1200×630, so shared links show a designed card.
+- **Real sitemap.xml and robots.txt.**
+- Clean URLs — `/projects`, not `/projects.html`.
+
+### What you must do, in order
+
+1. **Google Search Console** — search.google.com/search-console. Add
+   `shanbhag003.com`; verification is automatic when the domain is at
+   Cloudflare. Submit `https://shanbhag003.com/sitemap.xml`. Then **URL
+   Inspection → Request indexing** on each of the five pages. Skip this and you
+   wait weeks.
+
+2. **Bing Webmaster Tools** — bing.com/webmasters. Import from Search Console in
+   one click. Bing feeds several AI search products.
+
+3. **Link to the site from every profile you own.** This is the highest-value
+   SEO work available to you, because those pages already rank for your name:
+   - LinkedIn → Contact info → Website
+   - GitHub → bio and website field
+   - Medium → profile
+   - Tableau Public → profile
+   - X bio
+
+   Your structured data points out to them; they need to point back. Both
+   directions matter.
+
+4. **Use one spelling everywhere.** "Kartik Shanbhag" — not "Kartik D Shanbhag"
+   on one profile and "K. Shanbhag" on another.
+
+### Realistic timeline
+
+Your name is uncommon, which helps. The pages competing with you are your own
+LinkedIn, GitHub and Medium, all of which will link here.
+
+- **Week 1–2:** indexed
+- **Month 1–2:** first page for "Kartik Shanbhag"
+- **Month 3–6:** top result, once profile links are crawled
+
+What won't happen quickly: ranking for "product manager sports data". That's a
+competitive commercial term and isn't worth chasing.
+
+### The best thing you can do afterwards
+
+Publish on your own domain. Every article is another indexed page carrying your
+name and able to rank for its own topic. Your five pieces currently live on
+Medium, and Medium gets that credit.
+
+---
+
+## If you pick a different domain
+
+Five things reference `shanbhag003.com`: the `canonical` and `og:url` tags in
+each HTML file, `sitemap.xml`, `robots.txt`, and the `url` and `sameAs` values
+in the JSON-LD block in `index.html`.
+
+## Editing later, with no local setup
+
+Press **`.`** on any file in the GitHub repo. A full VS Code opens in the
+browser. Edit, commit, and Cloudflare redeploys in under a minute.
+
+---
+
+## Outstanding
+
+- The `®` was replaced with `™`. Only use `®` if you actually register the
+  mark — claiming registration falsely is an offence under s.107 of the Trade
+  Marks Act 1999.
+- Your résumé PDF still carries percentages the site deliberately omits.
+- Articles link out to Medium rather than living on the domain.
