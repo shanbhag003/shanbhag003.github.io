@@ -1230,7 +1230,7 @@ ul.plain li::before { content: ""; position: absolute; left: 0; top: .74em; widt
    component in a case block gets a dark counterpart here.
    ============================================================ */
 
-.case.alt { background: #101016; }          /* a perceptible step between cases */
+.case.alt, .band-dark.alt { background: #101016; }          /* a perceptible step between cases */
 .case + .case { border-top: 1px solid #24242a; }
 .band-dark .screen { background: #16161d; border-color: #30303a; }
 .band-dark .screen-bar { background: #101017; border-bottom-color: #30303a; }
@@ -1520,3 +1520,74 @@ body.lb-open { overflow: hidden; }
 
 .ilink-d { color: var(--gold-deep); text-decoration: none; border-bottom: 1px solid rgba(138,109,16,.4); }
 .ilink-d:hover { border-bottom-color: var(--gold-deep); }
+
+/* ============================================================
+   TRY IT — click-to-load embed
+   The tool is ~6 MB. Loading it with the page would make the
+   home page 25x heavier, so nothing loads until someone asks.
+   Desktop mounts the iframe inside the phone frame; touch gets
+   a full-screen overlay, because nested scrolling inside an
+   iframe is unreliable on iOS.
+   ============================================================ */
+
+.tryout { display: grid; grid-template-columns: auto 1fr; gap: clamp(1.75rem, 5vw, 4.5rem); align-items: center; margin-top: 2.75rem; }
+@media (max-width: 900px) {
+  .tryout { grid-template-columns: 1fr; gap: 1.75rem; }
+  /* a full-height phone eats the screen on a phone, so cap it */
+  .tryout-phone { width: min(260px, 64vw); border-width: 8px; border-radius: 34px; }
+  .tryout-play b { font-size: .9375rem; padding: .65rem 1.2rem; }
+}
+
+.tryout-phone {
+  position: relative; width: min(330px, 72vw); aspect-ratio: 390 / 844;
+  border: 10px solid #34343c; border-radius: 42px; overflow: hidden;
+  background: #08080b; justify-self: center;
+  box-shadow: 0 28px 60px rgba(0,0,0,.55);
+}
+.tryout-phone iframe { width: 100%; height: 100%; border: 0; display: block; }
+
+.tryout-poster {
+  position: absolute; inset: 0; padding: 0; border: 0; cursor: pointer;
+  background: none; display: block; width: 100%; height: 100%;
+}
+.tryout-poster img { width: 100%; height: 100%; object-fit: cover; object-position: top center; }
+.tryout-poster::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(to bottom, rgba(7,7,10,.25) 0%, rgba(7,7,10,.55) 55%, rgba(7,7,10,.92) 100%);
+  transition: background .25s;
+}
+.tryout-poster:hover::after { background: linear-gradient(to bottom, rgba(7,7,10,.15) 0%, rgba(7,7,10,.45) 55%, rgba(7,7,10,.88) 100%); }
+
+.tryout-play {
+  position: absolute; left: 50%; bottom: 2.2rem; transform: translateX(-50%);
+  z-index: 2; display: inline-flex; flex-direction: column; align-items: center; gap: .5rem;
+  pointer-events: none; width: 86%;
+}
+.tryout-play b {
+  font-family: var(--body); font-size: 1rem; font-weight: 600; color: var(--paper);
+  background: var(--gold); border-radius: 999px; padding: .75rem 1.5rem; white-space: nowrap;
+  transition: background .2s;
+}
+.tryout-poster:hover .tryout-play b { background: #fff; }
+.tryout-play span { font-family: var(--mono); font-size: .625rem; letter-spacing: .08em; color: rgba(255,255,255,.72); text-align: center; }
+
+.tryout-copy h3 { font-size: clamp(1.5rem, 3vw, 2.2rem); letter-spacing: -.035em; margin-bottom: 1rem; }
+.tryout-steps { list-style: none; margin: 0 0 1.6rem; padding: 0; }
+.tryout-steps li {
+  display: grid; grid-template-columns: 1.9rem 1fr; gap: .8rem; align-items: baseline;
+  padding: .7rem 0; border-top: 1px solid #26262e; font-size: .9375rem; color: #c3c0b9;
+}
+.tryout-steps li b { font-family: var(--mono); font-size: .8125rem; color: var(--gold); font-weight: 400; }
+
+/* full-screen overlay for touch */
+.tryfull { position: fixed; inset: 0; z-index: 10000; display: none; background: #07070a; }
+.tryfull.on { display: block; }
+.tryfull iframe { width: 100%; height: 100%; border: 0; display: block; }
+.tryfull-close {
+  position: absolute; top: max(.85rem, env(safe-area-inset-top)); right: .85rem; z-index: 2;
+  width: 46px; height: 46px; border-radius: 50%; cursor: pointer;
+  background: rgba(11,11,12,.82); border: 1px solid #4a4a52; color: #fff;
+  display: inline-flex; align-items: center; justify-content: center; font-size: 1.4rem; line-height: 1;
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+}
+body.tryfull-open { overflow: hidden; }

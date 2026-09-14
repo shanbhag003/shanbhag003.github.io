@@ -188,6 +188,75 @@
     draw();
   }
 
+  /* ---------- Player Scout, loaded on demand ----------
+     The tool is roughly 6 MB. Loading it with the page would make the
+     home page far heavier for everyone, including the majority who
+     never try it. Nothing is fetched until someone asks.
+
+     Desktop mounts it inside the phone frame. Touch gets a full-screen
+     overlay instead, because a scrollable iframe inside a scrolling
+     page is unreliable on iOS. */
+  (function () {
+    var launch = document.getElementById("scout-launch");
+    var phone = document.getElementById("scout-phone");
+    if (!launch || !phone) return;
+
+    var SRC = "https://shanbhag003.github.io/player-scout/";
+    var touch = window.matchMedia("(hover: none), (max-width: 900px)").matches;
+
+    var frame = function () {
+      var f = document.createElement("iframe");
+      f.src = SRC;
+      f.title = "Player Scout";
+      f.loading = "lazy";
+      f.setAttribute("allow", "clipboard-write");
+      return f;
+    };
+
+    var full = null, scrollY = 0;
+    var openFull = function () {
+      scrollY = window.scrollY;
+      full = document.createElement("div");
+      full.className = "tryfull on";
+      full.setAttribute("role", "dialog");
+      full.setAttribute("aria-label", "Player Scout");
+      var close = document.createElement("button");
+      close.className = "tryfull-close";
+      close.type = "button";
+      close.setAttribute("aria-label", "Close Player Scout");
+      close.innerHTML = "&times;";
+      full.appendChild(close);
+      full.appendChild(frame());
+      document.body.appendChild(full);
+      document.body.classList.add("tryfull-open");
+      document.body.style.position = "fixed";
+      document.body.style.top = -scrollY + "px";
+      document.body.style.width = "100%";
+      close.focus({ preventScroll: true });
+
+      var shut = function () {
+        full.remove(); full = null;
+        document.body.classList.remove("tryfull-open");
+        document.body.style.position = "";
+        document.body.style.top = "";
+        document.body.style.width = "";
+        window.scrollTo(0, scrollY);
+        launch.focus({ preventScroll: true });
+      };
+      close.addEventListener("click", shut);
+      document.addEventListener("keydown", function esc(e) {
+        if (e.key === "Escape" && full) { shut(); document.removeEventListener("keydown", esc); }
+      });
+    };
+
+    launch.addEventListener("click", function () {
+      if (window.gtag) gtag("event", "scout_launch", { mode: touch ? "fullscreen" : "inline" });
+      if (touch) { openFull(); return; }
+      launch.remove();
+      phone.appendChild(frame());
+    });
+  })();
+
   /* ---------- image lightbox ----------
      Every content image opens full-size. Decorative images (the stage
      backdrop, anything with an empty alt) are skipped, since there's
