@@ -195,6 +195,11 @@ section.band-dark + section { border-top: 0; }
 .band-dark .btn-live, .foot .btn-live { background: var(--gold); border-color: var(--gold); color: var(--paper); font-weight: 600; }
 .band-dark .btn-live:hover, .foot .btn-live:hover { background: #fff; border-color: #fff; color: var(--paper); }
 .btn-live:hover { background: var(--gold); border-color: var(--gold); color: var(--paper); box-shadow: none; }
+/* hero CTA sits on the dark stage photo — gold reads there and marks the live/measured target */
+.stage .btn-live { background: var(--gold); border-color: var(--gold); color: var(--paper); font-weight: 600; }
+.stage .btn-live:hover { background: #fff; border-color: #fff; color: var(--paper); }
+/* land the anchor below the sticky nav */
+#live { scroll-margin-top: calc(var(--nav-h) + 1rem); }
 
 /* ---------- claim cards ---------- */
 
