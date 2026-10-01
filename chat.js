@@ -10,8 +10,8 @@
   var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   /* non-sensitive UI strings only (safe to be public) */
-  var STARTERS = ["Who is Kartik?", "What has he built?", "How can I get in touch?"];
-  var GREETING = "Hi — I can tell you about Kartik, his experience, and anything he's built, at work or on his own. What would you like to know?";
+  var STARTERS = ["Who is Kartik?", "What he's built", "Contact Kartik"];
+  var GREETING = "Hi, I'm Cris — I can tell you about Kartik, his experience, and anything he's built, at work or on his own. What would you like to know?";
   var FALLBACK = "Sorry, I couldn't reach the assistant just now. You can email Kartik at kshanbhag231@gmail.com, or try again in a moment.";
 
   var panel = null, list = null, input = null, launcher = null, suggEl = null;
@@ -61,14 +61,12 @@
     return row;
   }
 
-  function renderSuggestions(items, labelled) {
+  function renderSuggestions(items) {
     if (!suggEl) return;
     suggEl.innerHTML = "";
     if (!items || !items.length) { suggEl.hidden = true; return; }
-    if (labelled) suggEl.appendChild(el("p", "cb-sugg-label", "Suggested"));
     items.forEach(function (s) {
-      var b = el("button", "cb-chip",
-        '<span>' + esc(s) + '</span><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M5 12h12l-4.5-4.5 1.4-1.4L21 12l-7.1 6-1.4-1.4L17 12H5z"/></svg>');
+      var b = el("button", "cb-chip", esc(s));
       b.type = "button";
       b.addEventListener("click", function () { send(s); });
       suggEl.appendChild(b);
@@ -90,7 +88,7 @@
       setTimeout(function () {
         if (wait.parentNode) wait.parentNode.removeChild(wait);
         addMsg("bot", (r && r.answer) || esc(FALLBACK));
-        renderSuggestions((r && r.follow && r.follow.length ? r.follow : STARTERS), true);
+        renderSuggestions(r && r.follow && r.follow.length ? r.follow : STARTERS);
       }, reduce ? 0 : delay);
     });
   }
@@ -99,7 +97,7 @@
     if (!list) return;
     list.innerHTML = "";
     addMsg("bot", esc(GREETING));
-    renderSuggestions(STARTERS, false);
+    renderSuggestions(STARTERS);
     if (input) input.focus();
   }
 
@@ -116,8 +114,8 @@
     var head = el("div", "cb-head");
     head.innerHTML =
       '<span class="cb-brand"><span class="cb-brand-mark" aria-hidden="true">' + BOT_AVATAR + '</span>' +
-      '<span class="cb-brand-text"><span id="cb-title">Portfolio assistant</span>' +
-      '<span class="cb-sub">Answers drawn from this site</span></span></span>';
+      '<span class="cb-brand-text"><span id="cb-title">Cris</span>' +
+      '<span class="cb-sub">Your companion</span></span></span>';
     var tools = el("div", "cb-tools");
     var refresh = el("button", "cb-icon");
     refresh.type = "button";
@@ -145,7 +143,7 @@
     input = el("input", "cb-input");
     input.type = "text";
     input.setAttribute("aria-label", "Type your question");
-    input.setAttribute("placeholder", "Ask about Kartik or a project…");
+    input.setAttribute("placeholder", "Ask Cris about Kartik…");
     input.setAttribute("autocomplete", "off");
     var sendBtn = el("button", "cb-send");
     sendBtn.type = "submit";
@@ -180,7 +178,7 @@
     launcher.setAttribute("aria-expanded", "true");
     open = true;
     if (isMobile()) { document.documentElement.classList.add("cb-open"); lockScroll(); }
-    if (list.childNodes.length === 0) { addMsg("bot", esc(GREETING)); renderSuggestions(STARTERS, false); }
+    if (list.childNodes.length === 0) { addMsg("bot", esc(GREETING)); renderSuggestions(STARTERS); }
     setTimeout(function () { input && input.focus(); }, reduce ? 0 : 160);
   }
   function closePanel() {
@@ -207,11 +205,12 @@
   function init() {
     launcher = el("button", "cb-launch");
     launcher.type = "button";
-    launcher.setAttribute("aria-label", "Ask about this portfolio");
+    launcher.setAttribute("aria-label", "Chat with Cris");
     launcher.setAttribute("aria-expanded", "false");
     launcher.innerHTML =
-      '<svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" focusable="false">' +
-      '<path fill="currentColor" d="M12 3C6.98 3 3 6.58 3 11c0 2.4 1.2 4.54 3.1 6.0-.15 1.1-.6 2.2-1.3 3.1-.2.25-.03.62.29.6 1.9-.12 3.5-.75 4.6-1.5.73.17 1.5.26 2.3.26 5.02 0 9-3.58 9-8s-3.98-8-9-8z"/></svg>';
+      '<svg viewBox="0 0 24 24" width="26" height="26" aria-hidden="true" focusable="false">' +
+      '<path fill="currentColor" d="M12 2l1.7 5.1L19 9l-5.3 1.4L12 16l-1.7-5.1L5 9l5.3-1.4z"/>' +
+      '<circle fill="currentColor" cx="6" cy="18" r="1.7"/><circle fill="currentColor" cx="18" cy="18" r="1.7"/></svg>';
     launcher.addEventListener("click", function () { open ? closePanel() : openPanel(); });
     document.body.appendChild(launcher);
   }
