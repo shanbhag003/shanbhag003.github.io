@@ -6,79 +6,92 @@
     {
       "id": "about",
       "q": "Who is Kartik Shanbhag and what does he do?",
-      "tags": ["who", "kartik", "shanbhag", "bio", "background", "product", "manager", "pm", "role", "introduce", "introduction"],
+      "tags": ["who", "bio", "background", "product", "manager", "pm", "role", "introduce", "introduction"],
+      "follow": ["What has he built?", "What's his experience?", "How can I get in touch?"],
       "a": "Kartik Shanbhag is a product manager at SI (formerly Sportz Interactive), where he builds real-time sports data products — live auctions and drafts, APIs at broadcast scale, and forecasting models he builds himself. He's based in Mumbai. You can read the <a href=\"/experience\">full experience</a> or browse <a href=\"/projects\">what he's built</a>."
     },
     {
       "id": "skills",
       "q": "What are his skills or areas of focus?",
       "tags": ["skills", "skill", "focus", "expertise", "capabilities", "capability", "specialise", "specialize", "strengths", "realtime", "real-time", "apis", "api", "forecasting", "operations"],
+      "follow": ["What has he built?", "What's his experience?", "How can I get in touch?"],
       "a": "His work centres on four things: real-time data products, live event operations, APIs at broadcast scale, and forecasting models. The <a href=\"/projects\">projects</a> are where he proves each of those end to end — built alone, with public code behind every claim."
     },
     {
       "id": "experience",
       "q": "What is his experience and track record?",
-      "tags": ["experience", "career", "sportz", "interactive", "si", "clients", "client", "awards", "award", "recognition", "company", "employer", "worked", "timeline"],
-      "a": "Kartik has been at SI (formerly Sportz Interactive) since 2021. The work spans broadcasters, OTT platforms, fantasy operators, technology companies and governing bodies across India and abroad — feeds, APIs, dashboards and live auction and draft platforms, managed end to end. Three company awards in five years (Value Star – Passion in 2025 and 2023, Rookie of the Year in 2022). The <a href=\"/experience\">experience page</a> has the month-by-month record."
+      "tags": ["experience", "career", "sportz", "interactive", "si", "clients", "client", "awards", "award", "recognition", "company", "employer", "worked", "timeline", "served", "many"],
+      "follow": ["What has he built?", "What awards has he won?", "How can I get in touch?"],
+      "a": "Kartik has been at SI (formerly Sportz Interactive) since 2021. He's shipped for <strong>25 clients</strong> and delivered <strong>35+ client projects</strong> — for broadcasters, OTT platforms, fantasy operators, technology companies and governing bodies across India and abroad — spanning 12 sports and 15 live auctions and drafts. Three company awards in five years: Value Star – Passion (2025 and 2023) and Rookie of the Year (2022). The <a href=\"/experience\">experience page</a> has the month-by-month record."
     },
     {
       "id": "player-scout",
       "q": "Tell me about Player Scout, the football similarity tool.",
       "tags": ["scout", "footballer", "similar", "similarity", "pca", "scouting", "cherki"],
+      "follow": ["Tell me about the PL Supercomputer", "Tell me about the Cricket AI Digest", "How can I get in touch?"],
       "a": "Player Scout (Python · principal component analysis · GitHub Actions) takes a footballer you already have a view on and finds who else plays like him across five seasons of the big-five leagues, then shows where the two differ — ranking each player against his own position, not the whole pool. <a href=\"https://shanbhag003.github.io/player-scout/\" target=\"_blank\" rel=\"noopener noreferrer\">Try it</a> · <a href=\"https://github.com/shanbhag003/player-scout\" target=\"_blank\" rel=\"noopener noreferrer\">Code</a>."
     },
     {
       "id": "pl-supercomputer",
       "q": "Tell me about the Premier League Supercomputer forecast model.",
       "tags": ["supercomputer", "premier", "league", "forecast", "forecasting", "table", "title", "prediction", "predict", "dixon", "coles", "monte", "carlo", "simulation", "simulations"],
+      "follow": ["What is the live data on the home page?", "Tell me about the FPL Auto Manager", "Tell me about Player Scout"],
       "a": "The Premier League Supercomputer (Python · Dixon-Coles · Monte Carlo) predicts the Premier League table, refits itself after every gameweek, and grades its own past predictions against the closing market — 20,000 season simulations per run, and nobody presses anything. It's also what powers the live title-probability bars on the <a href=\"/\">home page</a>. <a href=\"https://shanbhag003.github.io/pl-supercomputer/\" target=\"_blank\" rel=\"noopener noreferrer\">View the live forecast</a> · <a href=\"https://github.com/shanbhag003/pl-supercomputer\" target=\"_blank\" rel=\"noopener noreferrer\">Code</a>."
     },
     {
       "id": "cricket-digest",
       "q": "Tell me about the Cricket AI Digest.",
       "tags": ["cricket", "digest", "espn", "commentary", "briefing", "briefings", "analyst", "fan", "persona", "websocket", "t20"],
+      "follow": ["Tell me about the FPL Auto Manager", "Tell me about Player Scout", "What has he built?"],
       "a": "Cricket AI Digest (Node · ESPN Cricket API · Claude · WebSocket) turns one live cricket feed into two briefings from the same match state — the facts behind the moment for an analyst, why it matters for a fan — for about 14¢ an entire T20. <a href=\"https://cricket-ai-digest.onrender.com/\" target=\"_blank\" rel=\"noopener noreferrer\">View it live</a> · <a href=\"https://github.com/shanbhag003/cricket-ai-digest\" target=\"_blank\" rel=\"noopener noreferrer\">Code</a>. (It's on a free tier that sleeps when idle, so the first load can take a minute to wake.)"
     },
     {
       "id": "fpl",
       "q": "Tell me about the FPL Auto Manager, the autonomous Fantasy Premier League bot.",
       "tags": ["fpl", "fantasy", "auto", "manager", "autonomous", "bot", "transfers", "captain", "lambda", "optimiser", "optimizer", "squad", "linear", "programming"],
+      "follow": ["Tell me about the PL Supercomputer", "Tell me about the Cricket AI Digest", "How can I get in touch?"],
       "a": "FPL Auto Manager (Python · AWS Lambda · linear programming · Claude) rates every player, plans transfers, picks the eleven and the captain, submits them, and publishes its projection before kickoff so it can be marked against a human — unattended, every week. <a href=\"https://shanbhag003.github.io/fpl-auto-manager\" target=\"_blank\" rel=\"noopener noreferrer\">Bot versus human, live</a> · <a href=\"https://github.com/shanbhag003/fpl-auto-manager\" target=\"_blank\" rel=\"noopener noreferrer\">Code</a>."
     },
     {
       "id": "projects",
       "q": "What has he built? An overview of all the projects.",
       "tags": ["projects", "project", "built", "build", "made", "systems", "portfolio", "overview"],
+      "follow": ["Tell me about Player Scout", "Tell me about the PL Supercomputer", "Tell me about the Cricket AI Digest"],
       "a": "Four systems, each designed, built and deployed alone, with a live link and public code:<br>• <strong>Player Scout</strong> — finds footballers who play like one you name.<br>• <strong>Premier League Supercomputer</strong> — forecasts the PL table and refits itself weekly.<br>• <strong>Cricket AI Digest</strong> — one live feed, two persona briefings.<br>• <strong>FPL Auto Manager</strong> — an autonomous Fantasy Premier League manager.<br>See them all on the <a href=\"/projects\">projects page</a>."
     },
     {
       "id": "live-model",
       "q": "What is the live data on the home page?",
       "tags": ["live", "homepage", "bars", "probabilities", "running", "updated"],
+      "follow": ["How does the PL Supercomputer work?", "What has he built?", "How can I get in touch?"],
       "a": "The bars on the home page are live. They're the current Premier League title probabilities, read straight from Kartik's <a href=\"https://shanbhag003.github.io/pl-supercomputer/\" target=\"_blank\" rel=\"noopener noreferrer\">forecasting model</a>, which rewrites its own output after every round of matches — nothing on it is hand-updated. If the numbers have changed, the model changed them."
     },
     {
       "id": "articles",
       "q": "Does he write? Where are the articles?",
       "tags": ["articles", "article", "writing", "writes", "blog", "medium", "football"],
+      "follow": ["Where are his dashboards?", "What has he built?", "How can I get in touch?"],
       "a": "Kartik writes about football and data. The <a href=\"/articles\">articles page</a> collects the writing, and the full set lives on <a href=\"https://shanbhag003.medium.com/\" target=\"_blank\" rel=\"noopener noreferrer\">Medium</a>."
     },
     {
       "id": "visualisations",
       "q": "Where are his data visualisations and dashboards?",
       "tags": ["visualisations", "visualizations", "visualisation", "dashboards", "dashboard", "tableau", "charts", "viz", "data"],
+      "follow": ["Does he write articles?", "What has he built?", "How can I get in touch?"],
       "a": "The <a href=\"/visualisations\">data page</a> has his Tableau dashboards; the full profile is on <a href=\"https://public.tableau.com/app/profile/kartik.shanbhag/vizzes\" target=\"_blank\" rel=\"noopener noreferrer\">Tableau Public</a>."
     },
     {
       "id": "contact",
       "q": "How can I get in touch or hire him?",
       "tags": ["contact", "touch", "reach", "email", "hire", "hiring", "connect", "message", "talk", "linkedin", "github", "resume", "cv", "résumé", "available"],
+      "follow": ["What has he built?", "What's his experience?", "What are his skills?"],
       "a": "The best way to reach Kartik is email — <a href=\"mailto:kshanbhag231@gmail.com?subject=Hello%20Kartik\">kshanbhag231@gmail.com</a>. He's also on <a href=\"https://www.linkedin.com/in/kartik-shanbhag-b29806129/\" target=\"_blank\" rel=\"noopener noreferrer\">LinkedIn</a> and <a href=\"https://github.com/shanbhag003\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub</a>, and you can <a href=\"assets/Kartik_Shanbhag_Resume.pdf\" download>download his résumé</a>."
     },
     {
       "id": "site",
       "q": "How was this website built?",
-      "tags": ["site", "website", "stack", "framework", "html", "javascript", "built", "build"],
+      "tags": ["site", "website", "stack", "framework", "html", "javascript"],
+      "follow": ["What has he built?", "What's his experience?", "How can I get in touch?"],
       "a": "This site is five pages of hand-written HTML, one stylesheet and one script — no framework, no build step and no dependencies. The content lives in the HTML so it works even if scripts fail, and the home page pulls live numbers from Kartik's own forecasting model. The source is on <a href=\"https://github.com/shanbhag003/shanbhag003.github.io\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub</a>."
     },
     {
