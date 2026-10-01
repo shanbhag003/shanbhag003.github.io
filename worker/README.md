@@ -1,49 +1,32 @@
-# Portfolio assistant — Cloudflare Worker (Phase 2)
+# Portfolio assistant — architecture
 
-This Worker adds natural-language routing to the chat widget. It's optional:
-without it, `chat.js` runs on local keyword matching. With it, the widget sends
-each question here, the Worker asks a Workers AI model to pick the best topic id,
-and `chat.js` shows the hand-vetted answer for that id from `kb.json`.
+The chat widget (`chat.js`) is a thin client. It sends the visitor's question to
+a Cloudflare Worker and renders the single answer + follow-up suggestions that
+come back. **It never downloads a knowledge-base file.**
 
-**The Worker never writes answers.** It only returns one id (or `none`), so the
-model's output is constrained to an enum — hallucination and prompt injection
-are contained by design.
+## Why the Worker holds the knowledge base
 
-## Cost
+The knowledge base contains richer professional detail than the website shows and
+must not be publicly browsable. So it lives **inside the deployed Worker** (whose
+source Cloudflare does not serve), not in this public repo and not as a static
+`kb.json`. The Worker returns only the one answer for each question, so the full
+KB is never exposed. Sensitive material (phone number, reason-for-change,
+ownership caveats, boundaries) is deliberately not in the Worker at all — it only
+informs how answers are worded.
 
-Free tier: Cloudflare Workers (100k requests/day) + Workers AI (10k Neurons/day).
-A classification call is tiny, so portfolio traffic stays comfortably free.
+## How it works
 
-## Deploy (dashboard, ~5 min — no CLI needed)
+1. `chat.js` POSTs `{ "q": "<question>" }` to the Worker.
+2. The Worker asks a Workers AI model to classify the question into one intent id
+   (the model only ever outputs an id — never prose — so hallucination and prompt
+   injection are contained). A server-side keyword match is the fallback.
+3. The Worker returns `{ id, answer, follow }` from its private KB.
 
-1. Cloudflare dashboard → **Workers & Pages** → **Create** → **Create Worker**.
-2. Name it (e.g. `portfolio-chat`), **Deploy**, then **Edit code**.
-3. Replace the contents with `chat-worker.js` from this folder. **Save and deploy**.
-4. **Settings → Bindings → Add → Workers AI**. Variable name: `AI`. Save.
-5. Copy the Worker URL (e.g. `https://portfolio-chat.<you>.workers.dev`).
-6. In `chat.js`, set `WORKER_URL` to that URL. Commit and push.
+## Deploy / edit
 
-## Deploy (Wrangler CLI — alternative)
+The Worker is the standalone `portfolio-chat` Worker
+(`portfolio-chat.kshanbhag231.workers.dev`), created in the Cloudflare dashboard
+with a Workers AI binding named `AI`. To change the KB or logic, edit that Worker
+in the dashboard — the source is intentionally kept out of this public repository.
 
-```
-npm i -g wrangler
-wrangler login
-wrangler deploy worker/chat-worker.js --name portfolio-chat --compatibility-date 2024-01-01
-```
-
-Add the AI binding in `wrangler.toml`:
-
-```
-[ai]
-binding = "AI"
-```
-
-## Notes
-
-- `ALLOWED_ORIGINS` in `chat-worker.js` restricts who can call the Worker. It
-  already lists `shanbhag003.com`, `www.shanbhag003.com` and `localhost:8000`.
-- Swap `MODEL` for any Workers AI text model. `llama-3.1-8b-instruct` is a good
-  default for classification.
-- For heavier abuse protection, put Cloudflare Turnstile in front of the widget
-  or add rate limiting (KV / Rate Limiting rules). Not required at portfolio
-  traffic.
+Free tier: Workers (100k req/day) + Workers AI (10k Neurons/day).

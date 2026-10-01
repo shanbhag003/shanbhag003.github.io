@@ -1,29 +1,21 @@
-/* shanbhag003.com — portfolio assistant. No dependencies.
-   The LLM (Phase 2, via a Cloudflare Worker) only ever CLASSIFIES a question
-   into one of the intent ids in kb.json; every answer shown comes from kb.json,
-   so the visitor only ever sees hand-vetted copy. With no Worker set, or if it
-   fails, the widget falls back to local keyword matching. */
+/* shanbhag003.com — portfolio assistant (private-KB client).
+   The knowledge base lives server-side in the Cloudflare Worker, not in any
+   public file. The browser sends only the visitor's question and renders the
+   single curated answer + follow-ups the Worker returns. No KB is downloaded. */
 (function () {
   "use strict";
 
-  /* ---- Phase 2: paste your deployed Worker URL here to enable LLM routing.
-     Leave empty to run on local keyword matching only. ---- */
   var WORKER_URL = "https://portfolio-chat.kshanbhag231.workers.dev";
 
   var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  var kb = null;
-  var panel = null, list = null, input = null, launcher = null, suggEl = null;
-  var open = false, built = false, loading = false, scrollY = 0, lastFocus = null;
+  /* non-sensitive UI strings only (safe to be public) */
+  var STARTERS = ["Who is Kartik?", "What has he built?", "How can I get in touch?"];
+  var GREETING = "Hi — I can tell you about Kartik, his experience, and anything he's built, at work or on his own. What would you like to know?";
+  var FALLBACK = "Sorry, I couldn't reach the assistant just now. You can email Kartik at kshanbhag231@gmail.com, or try again in a moment.";
 
-  /* filler and name words carry no topic signal, so they are dropped before
-     matching. "kartik"/"shanbhag" appear in most questions, so they must not
-     route to the bio intent on their own. */
-  var STOP = ("about tell the a an me my your is are am was were to of for in on at and or " +
-    "please want need know show see give this that it its i he she his her him has have had can " +
-    "could would should will do does did what how why when where which be been get got some any " +
-    "with as by from so just kartik shanbhag kartiks").split(" ")
-    .reduce(function (o, w) { o[w] = 1; return o; }, {});
+  var panel = null, list = null, input = null, launcher = null, suggEl = null;
+  var open = false, built = false, scrollY = 0, lastFocus = null;
 
   function esc(s) {
     return String(s).replace(/[&<>"']/g, function (c) {
@@ -36,47 +28,15 @@
     if (html != null) n.innerHTML = html;
     return n;
   }
-  function tokens(text) {
-    return text.toLowerCase().replace(/[^a-z0-9\s-]/g, " ").split(/\s+/).filter(Boolean);
-  }
 
-  /* Two-tier local match: score by topic tags; if nothing matches but the
-     visitor named Kartik, fall back to the bio. Earliest intent wins ties, so
-     kb.json lists the specific projects before the generic overview. */
-  function localMatch(text) {
-    if (!kb) return null;
-    var raw = tokens(text);
-    var words = raw.filter(function (w) { return !STOP[w]; });
-    var best = null, bestScore = 0;
-    kb.intents.forEach(function (it) {
-      var score = 0;
-      (it.tags || []).forEach(function (tag) { if (words.indexOf(tag) !== -1) score += 1; });
-      if (score > bestScore) { bestScore = score; best = it.id; }
-    });
-    if (bestScore >= 1) return best;
-    if (raw.indexOf("kartik") !== -1 || raw.indexOf("shanbhag") !== -1) return "about";
-    return null;
-  }
-
-  function intentById(id) {
-    if (!id || !kb) return null;
-    for (var i = 0; i < kb.intents.length; i++) if (kb.intents[i].id === id) return kb.intents[i];
-    return null;
-  }
-
-  function resolveIntent(text) {
-    if (!WORKER_URL) return Promise.resolve(localMatch(text));
-    var menu = kb.intents.map(function (it) { return { id: it.id, q: it.q }; });
+  /* ask the Worker; it returns the curated answer + follow-ups, or a refusal */
+  function ask(text) {
     return fetch(WORKER_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ q: text, intents: menu })
+      method: "POST", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ q: text })
     }).then(function (r) { if (!r.ok) throw 0; return r.json(); })
-      .then(function (d) {
-        var id = d && d.id;
-        if (!id || id === "none") return null;
-        return intentById(id) ? id : localMatch(text);
-      }).catch(function () { return localMatch(text); });
+      .then(function (d) { return { answer: d && d.answer, follow: d && d.follow }; })
+      .catch(function () { return { answer: esc(FALLBACK), follow: STARTERS, _err: true }; });
   }
 
   var BOT_AVATAR =
@@ -101,7 +61,6 @@
     return row;
   }
 
-  /* suggestion pills — starters on open/reset, follow-ups after an answer */
   function renderSuggestions(items, labelled) {
     if (!suggEl) return;
     suggEl.innerHTML = "";
@@ -120,19 +79,18 @@
 
   function send(text) {
     text = (text || "").trim();
-    if (!text || !kb) return;
+    if (!text) return;
     renderSuggestions(null);
     addMsg("user", esc(text));
     input.value = "";
     var wait = thinking();
     var started = Date.now();
-    resolveIntent(text).then(function (id) {
+    ask(text).then(function (r) {
       var delay = Math.max(0, 440 - (Date.now() - started));
       setTimeout(function () {
         if (wait.parentNode) wait.parentNode.removeChild(wait);
-        var it = intentById(id);
-        addMsg("bot", (it && it.a) || kb.fallback);
-        renderSuggestions((it && it.follow) || kb.starters, true);
+        addMsg("bot", (r && r.answer) || esc(FALLBACK));
+        renderSuggestions((r && r.follow && r.follow.length ? r.follow : STARTERS), true);
       }, reduce ? 0 : delay);
     });
   }
@@ -140,8 +98,8 @@
   function resetChat() {
     if (!list) return;
     list.innerHTML = "";
-    if (kb && kb.greeting) addMsg("bot", esc(kb.greeting));
-    renderSuggestions(kb ? kb.starters : null, false);
+    addMsg("bot", esc(GREETING));
+    renderSuggestions(STARTERS, false);
     if (input) input.focus();
   }
 
@@ -157,11 +115,9 @@
 
     var head = el("div", "cb-head");
     head.innerHTML =
-      '<span class="cb-brand">' +
-        '<span class="cb-brand-mark" aria-hidden="true">' + BOT_AVATAR + '</span>' +
-        '<span class="cb-brand-text"><span id="cb-title">Portfolio assistant</span>' +
-        '<span class="cb-sub">Answers drawn from this site</span></span>' +
-      '</span>';
+      '<span class="cb-brand"><span class="cb-brand-mark" aria-hidden="true">' + BOT_AVATAR + '</span>' +
+      '<span class="cb-brand-text"><span id="cb-title">Portfolio assistant</span>' +
+      '<span class="cb-sub">Answers drawn from this site</span></span></span>';
     var tools = el("div", "cb-tools");
     var refresh = el("button", "cb-icon");
     refresh.type = "button";
@@ -217,18 +173,6 @@
   }
   function isMobile() { return window.matchMedia("(max-width: 640px)").matches; }
 
-  function loadKB() {
-    if (kb || loading) return Promise.resolve(kb);
-    loading = true;
-    return fetch("/kb.json").then(function (r) { return r.json(); }).then(function (d) {
-      kb = d; loading = false; return kb;
-    }).catch(function () {
-      loading = false;
-      kb = { intents: [], starters: [], greeting: "", fallback: "Sorry, the assistant could not load. Please email kshanbhag231@gmail.com." };
-      return kb;
-    });
-  }
-
   function openPanel() {
     buildPanel();
     lastFocus = document.activeElement;
@@ -236,10 +180,8 @@
     launcher.setAttribute("aria-expanded", "true");
     open = true;
     if (isMobile()) { document.documentElement.classList.add("cb-open"); lockScroll(); }
-    loadKB().then(function () {
-      if (list.childNodes.length === 0) { if (kb.greeting) addMsg("bot", esc(kb.greeting)); renderSuggestions(kb.starters, false); }
-      setTimeout(function () { input && input.focus(); }, reduce ? 0 : 160);
-    });
+    if (list.childNodes.length === 0) { addMsg("bot", esc(GREETING)); renderSuggestions(STARTERS, false); }
+    setTimeout(function () { input && input.focus(); }, reduce ? 0 : 160);
   }
   function closePanel() {
     if (!open) return;
