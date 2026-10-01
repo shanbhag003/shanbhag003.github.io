@@ -1616,6 +1616,9 @@ body.tryfull-open { overflow: hidden; }
   background: var(--ink); color: var(--paper); border: 1px solid var(--line); border-radius: 20px;
   box-shadow: 0 24px 60px rgba(11,11,12,.34); font-family: var(--body);
 }
+/* the [hidden] attribute must beat the display:flex above, or close/Esc/toggle
+   set hidden=true with no visual effect and the panel never closes */
+.cb-panel[hidden] { display: none; }
 
 /* header */
 .cb-head {
