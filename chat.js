@@ -8,7 +8,7 @@
 
   /* ---- Phase 2: paste your deployed Worker URL here to enable LLM routing.
      Leave empty to run on local keyword matching only. ---- */
-  var WORKER_URL = "";
+  var WORKER_URL = "https://portfolio-chat.kshanbhag231.workers.dev";
 
   var reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
