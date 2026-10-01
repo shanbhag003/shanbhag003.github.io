@@ -1,0 +1,10 @@
+{
+  // Deploy manifest for Cloudflare's Workers + Static Assets model.
+  // The site is static (no build step); this just tells `wrangler versions
+  // upload` that the whole repo root is the assets directory. Without it the
+  // deploy fails with "Missing entry-point to Worker script or to assets
+  // directory". Files excluded from upload live in .assetsignore.
+  "name": "shanbhag003",
+  "compatibility_date": "2026-10-01",
+  "assets": { "directory": "." }
+}
