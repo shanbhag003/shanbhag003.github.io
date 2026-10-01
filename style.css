@@ -1668,17 +1668,13 @@ body.tryfull-open { overflow: hidden; }
 @keyframes cbdot { 0%, 60%, 100% { transform: translateY(0); opacity: .5; } 30% { transform: translateY(-4px); opacity: 1; } }
 
 /* suggestion pills */
-.cb-sugg { display: flex; flex-direction: column; align-items: flex-start; gap: .4rem; padding: .1rem 1rem .7rem; }
-.cb-sugg-label { font-family: var(--mono); font-size: .68rem; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); margin: .1rem 0 .15rem; }
+.cb-sugg { display: flex; flex-wrap: wrap; gap: .4rem; padding: .15rem 1rem .6rem; }
 .cb-chip {
-  display: inline-flex; align-items: center; gap: .5rem; max-width: 100%; text-align: left;
-  font-family: var(--body); font-size: .875rem; cursor: pointer; color: var(--paper);
-  background: #fff; border: 1px solid var(--line-2); border-radius: 999px; padding: .55rem .5rem .55rem .9rem;
+  font-family: var(--body); font-size: .8rem; line-height: 1.1; cursor: pointer; color: var(--paper);
+  background: #fff; border: 1px solid var(--line-2); border-radius: 999px; padding: .4rem .75rem;
   transition: background .15s, border-color .15s, color .15s;
 }
-.cb-chip svg { flex-shrink: 0; color: var(--muted-2); transition: transform .15s, color .15s; }
 .cb-chip:hover { background: var(--gold); border-color: var(--gold); color: var(--paper); }
-.cb-chip:hover svg { color: var(--paper); transform: translateX(2px); }
 .cb-chip:focus-visible { outline: 2px solid var(--paper); outline-offset: 1px; }
 
 /* input */
