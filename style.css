@@ -450,6 +450,7 @@ ul.plain li::before { content: ""; position: absolute; left: 0; top: .74em; widt
 .foot-links a { font-family: var(--mono); font-size: .875rem; color: var(--on-dark-mu); text-decoration: none; }
 .foot-links a:hover { color: #fff; }
 .foot-base { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid #2a2a2c; font-family: var(--mono); font-size: .75rem; color: #7b8a9c; display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+.foot-privacy { margin: 1rem 0 0; font-size: .72rem; line-height: 1.5; color: #6c7a8a; max-width: 62ch; }
 
 /* ---------- motion ---------- */
 
