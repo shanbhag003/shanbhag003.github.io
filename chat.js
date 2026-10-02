@@ -43,16 +43,47 @@
   /* ask the Worker; it returns the curated answer + follow-ups, or a refusal.
      We also send light, non-identifying context so Kartik can refine the bot:
      how the question arrived, which page, and desktop vs mobile. */
-  function ask(text, source) {
+  function rnd() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 8); }
+
+  function ask(text, source, mid) {
     return fetch(WORKER_URL, {
       method: "POST", headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        q: text, sid: SID, source: source || "typed",
+        q: text, sid: SID, mid: mid, source: source || "typed",
         page: location.pathname, device: isMobile() ? "mobile" : "desktop"
       })
     }).then(function (r) { if (!r.ok) throw 0; return r.json(); })
       .then(function (d) { return { answer: d && d.answer, follow: d && d.follow }; })
       .catch(function () { return { answer: esc(FALLBACK), follow: STARTERS, _err: true }; });
+  }
+
+  /* thumbs up/down under each answer — records whether the reply was helpful */
+  var THUMB_UP = '<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path fill="currentColor" d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-1z"/></svg>';
+  var THUMB_DOWN = '<svg viewBox="0 0 24 24" width="15" height="15" aria-hidden="true"><path fill="currentColor" d="M15 3H6c-.83 0-1.54.5-1.84 1.22l-3.02 7.05C1.05 11.5 1 11.74 1 12v2c0 1.1.9 2 2 2h6.31l-.95 4.57-.03.32c0 .41.17.79.44 1.06L9.83 23l6.59-6.59c.36-.36.58-.86.58-1.41V5c0-1.1-.9-2-2-2zm4 0v12h4V3h-4z"/></svg>';
+
+  function sendFeedback(mid, rating, up, down, wrap) {
+    try {
+      fetch(WORKER_URL + "/feedback", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sid: SID, mid: mid, rating: rating })
+      }).catch(function () {});
+    } catch (e) {}
+    (rating === 1 ? up : down).classList.add("cb-fb-on");
+    up.disabled = true; down.disabled = true;
+    wrap.classList.add("cb-fb-done");
+  }
+
+  function addFeedback(row, mid) {
+    if (!mid) return;
+    var wrap = el("div", "cb-fb");
+    var up = el("button", "cb-fb-btn", THUMB_UP);
+    up.type = "button"; up.setAttribute("aria-label", "Helpful answer");
+    var down = el("button", "cb-fb-btn", THUMB_DOWN);
+    down.type = "button"; down.setAttribute("aria-label", "Not a helpful answer");
+    up.addEventListener("click", function () { sendFeedback(mid, 1, up, down, wrap); });
+    down.addEventListener("click", function () { sendFeedback(mid, -1, up, down, wrap); });
+    wrap.appendChild(up); wrap.appendChild(down);
+    row.appendChild(wrap);
   }
 
   var BOT_AVATAR =
@@ -99,11 +130,13 @@
     input.value = "";
     var wait = thinking();
     var started = Date.now();
-    ask(text, source).then(function (r) {
+    var mid = rnd();
+    ask(text, source, mid).then(function (r) {
       var delay = Math.max(0, 440 - (Date.now() - started));
       setTimeout(function () {
         if (wait.parentNode) wait.parentNode.removeChild(wait);
-        addMsg("bot", (r && r.answer) || esc(FALLBACK));
+        var botRow = addMsg("bot", (r && r.answer) || esc(FALLBACK));
+        if (!(r && r._err)) addFeedback(botRow, mid);
         renderSuggestions(r && r.follow && r.follow.length ? r.follow : STARTERS);
       }, reduce ? 0 : delay);
     });
