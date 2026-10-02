@@ -29,11 +29,27 @@
     return n;
   }
 
-  /* ask the Worker; it returns the curated answer + follow-ups, or a refusal */
-  function ask(text) {
+  /* anonymous, per-visit id (sessionStorage, not a tracking cookie) — lets the
+     private analytics group one person's questions without identifying anyone */
+  function sessionId() {
+    try {
+      var k = "cb_sid", v = sessionStorage.getItem(k);
+      if (!v) { v = Date.now().toString(36) + Math.random().toString(36).slice(2, 8); sessionStorage.setItem(k, v); }
+      return v;
+    } catch (e) { return "x" + Math.random().toString(36).slice(2, 10); }
+  }
+  var SID = sessionId();
+
+  /* ask the Worker; it returns the curated answer + follow-ups, or a refusal.
+     We also send light, non-identifying context so Kartik can refine the bot:
+     how the question arrived, which page, and desktop vs mobile. */
+  function ask(text, source) {
     return fetch(WORKER_URL, {
       method: "POST", headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ q: text })
+      body: JSON.stringify({
+        q: text, sid: SID, source: source || "typed",
+        page: location.pathname, device: isMobile() ? "mobile" : "desktop"
+      })
     }).then(function (r) { if (!r.ok) throw 0; return r.json(); })
       .then(function (d) { return { answer: d && d.answer, follow: d && d.follow }; })
       .catch(function () { return { answer: esc(FALLBACK), follow: STARTERS, _err: true }; });
@@ -61,21 +77,21 @@
     return row;
   }
 
-  function renderSuggestions(items) {
+  function renderSuggestions(items, src) {
     if (!suggEl) return;
     suggEl.innerHTML = "";
     if (!items || !items.length) { suggEl.hidden = true; return; }
     items.forEach(function (s) {
       var b = el("button", "cb-chip", esc(s));
       b.type = "button";
-      b.addEventListener("click", function () { send(s); });
+      b.addEventListener("click", function () { send(s, src || "pill"); });
       suggEl.appendChild(b);
     });
     suggEl.hidden = false;
     list.scrollTop = list.scrollHeight;
   }
 
-  function send(text) {
+  function send(text, source) {
     text = (text || "").trim();
     if (!text) return;
     renderSuggestions(null);
@@ -83,7 +99,7 @@
     input.value = "";
     var wait = thinking();
     var started = Date.now();
-    ask(text).then(function (r) {
+    ask(text, source).then(function (r) {
       var delay = Math.max(0, 440 - (Date.now() - started));
       setTimeout(function () {
         if (wait.parentNode) wait.parentNode.removeChild(wait);
@@ -97,7 +113,7 @@
     if (!list) return;
     list.innerHTML = "";
     addMsg("bot", esc(GREETING));
-    renderSuggestions(STARTERS);
+    renderSuggestions(STARTERS, "starter");
     if (input) input.focus();
   }
 
@@ -151,7 +167,7 @@
     sendBtn.innerHTML = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true"><path fill="currentColor" d="M3.4 20.4 21 12 3.4 3.6 3.39 10.2 15 12l-11.61 1.8z"/></svg>';
     form.appendChild(input);
     form.appendChild(sendBtn);
-    form.addEventListener("submit", function (e) { e.preventDefault(); send(input.value); });
+    form.addEventListener("submit", function (e) { e.preventDefault(); send(input.value, "typed"); });
     panel.appendChild(form);
 
     panel.addEventListener("keydown", trapKey);
@@ -178,7 +194,7 @@
     launcher.setAttribute("aria-expanded", "true");
     open = true;
     if (isMobile()) { document.documentElement.classList.add("cb-open"); lockScroll(); }
-    if (list.childNodes.length === 0) { addMsg("bot", esc(GREETING)); renderSuggestions(STARTERS); }
+    if (list.childNodes.length === 0) { addMsg("bot", esc(GREETING)); renderSuggestions(STARTERS, "starter"); }
     setTimeout(function () { input && input.focus(); }, reduce ? 0 : 160);
   }
   function closePanel() {
