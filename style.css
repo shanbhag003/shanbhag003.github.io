@@ -38,6 +38,12 @@
 *, *::before, *::after { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; scroll-behavior: smooth; }
 
+/* iOS Safari lets the full-bleed rails + marquee rubber-band the whole page
+   sideways even though their own overflow is clipped. `clip` kills that stray
+   horizontal pan WITHOUT creating a scroll container — so the sticky nav and
+   the rails' own horizontal scrolling keep working (unlike overflow:hidden). */
+html, body { overflow-x: clip; max-width: 100%; }
+
 body {
   margin: 0;
   background: var(--ink);
