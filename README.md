@@ -1,7 +1,7 @@
 # shanbhag003.com
 
-My portfolio. Five pages of plain HTML, one stylesheet, one script, no build
-step.
+My portfolio. Five pages of plain HTML, one stylesheet, a little vanilla
+JavaScript, no build step.
 
 **Live:** [shanbhag003.com](https://shanbhag003.com)
 
@@ -34,6 +34,7 @@ visualisations.html   Tableau dashboards, accordion rows
 
 style.css             the whole design system, one file
 app.js                all behaviour, no dependencies
+chat.js               the on-site assistant (Cris) — widget + thumbs feedback
 analytics.js          GA4 + Clarity loader, IDs at the top
 
 assets/               project screenshots, architecture diagrams, résumé
@@ -55,6 +56,25 @@ model changed them.
 
 It fails visibly rather than silently: if the fetch doesn't return, the panel
 says so instead of rendering an empty box.
+
+---
+
+## The assistant
+
+A small companion — **Cris** — floats on every page. Ask it anything about me, my
+experience, or what I've built and it answers in a natural voice; anything
+off-topic gets a polite refusal.
+
+It can't make things up. An LLM only ever *classifies* a question into a topic —
+the answer itself comes from a hand-curated knowledge base, reworded to fit the
+question but never invented, and every link in a reply has to already exist in
+the source or the rewrite is discarded. That knowledge base lives server-side in
+a Cloudflare Worker (Workers AI, free tier), never in this public repo. Each
+answer carries a 👍/👎, and a private dashboard shows what people ask, where the
+knowledge base has gaps, and whether the replies land.
+
+`chat.js` is the whole client — the widget, the request and the feedback — with
+no dependencies, same as everything else here.
 
 ---
 
@@ -131,6 +151,9 @@ font. Everything else is hand-written.
 
 ## The projects it links to
 
+- [player-scout](https://github.com/shanbhag003/player-scout) — find the players
+  who play the same way, across football, men's and women's T20 cricket, and the
+  Pro Kabaddi League
 - [pl-supercomputer](https://github.com/shanbhag003/pl-supercomputer) — a
   Premier League forecast that refits itself weekly and grades its own past
   predictions against the closing market
