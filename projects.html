@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Projects — Kartik Shanbhag</title>
-<meta name="description" content="Four systems Kartik Shanbhag designed, built and deployed alone: a multi-sport scouting tool, a self-updating Premier League forecast, a live cricket digest, and an autonomous FPL manager. Live links, public code, and the experiments that failed.">
+<meta name="description" content="Five projects Kartik Shanbhag designed and built: a multi-sport scouting tool, a self-updating Premier League forecast, a live cricket digest, an autonomous FPL manager, and an AI football-analysis app from the Microsoft × Premier League hackathon. Live links, public code, and the experiments that failed.">
 <meta name="theme-color" content="#fcfcfd">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Projects — Kartik Shanbhag">
-<meta property="og:description" content="Four systems Kartik Shanbhag designed, built and deployed alone: a multi-sport scouting tool, a self-updating Premier League forecast, a live cricket digest, and an autonomous FPL manager. Live links, public code, and the experiments that failed.">
+<meta property="og:description" content="Five projects Kartik Shanbhag designed and built: a multi-sport scouting tool, a self-updating Premier League forecast, a live cricket digest, an autonomous FPL manager, and an AI football-analysis app from the Microsoft × Premier League hackathon. Live links, public code, and the experiments that failed.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -75,6 +75,7 @@
       <a href="#pl-supercomputer">PL Supercomputer</a>
       <a href="#cricket-digest">Cricket AI Digest</a>
       <a href="#fpl">FPL Auto Manager</a>
+      <a href="#better-ball">The Better Ball</a>
     </div>
   </div>
 </nav>
@@ -255,6 +256,50 @@
   </div>
 </section>
 
+<!-- ================= 05 ================= -->
+<section class="case band-dark" id="better-ball">
+  <div class="wrap case-grid">
+    <div class="case-media reveal">
+      <span class="screen">
+        <span class="screen-bar"><span class="live-dot"></span><span>The Better Ball — 2-minute demo</span></span>
+        <a class="video-fac" href="https://www.youtube.com/watch?v=TPpbWodMg5A" target="_blank" rel="noopener noreferrer" data-yt="TPpbWodMg5A" aria-label="Play the two-minute demo of The Better Ball">
+          <img src="assets/betterball-poster.png" alt="The Better Ball title card: every pass is a decision. The pass played is a white arrow marked 38%; the better option a green arrow marked 72%." width="900" height="506" loading="lazy">
+          <span class="video-play" aria-hidden="true"></span>
+        </a>
+      </span>
+      <figure class="diagram">
+        <img src="assets/betterball-arch.png" alt="Four stages left to right: a synthetic match engine with 22 players at 10 Hz feeds a decision engine (pass success, expected threat, expected goals, option ranking), which feeds AI agents on Microsoft Foundry, which feed the React web app." width="1400" height="780" loading="lazy">
+        <figcaption>A synthetic match in, every pass scored, AI agents turning the numbers into words, a broadcast-style replay out.</figcaption>
+      </figure>
+    </div>
+
+    <div class="case-body">
+      <p class="hack-badge reveal">Microsoft &times; Premier League &middot; &ldquo;Inside the Game&rdquo; Hackathon</p>
+      <h2 class="reveal">The Better Ball</h2>
+      <p class="stackline reveal">Python &middot; React &middot; Azure &middot; Microsoft Foundry (Agent Framework) &middot; MCP</p>
+      <p class="lede reveal">It replays a synthetic football match and grades every pass &mdash; the chance each option would succeed, the threat it would create, and how much was left on the table against the best ball available. Then AI agents turn those numbers into a broadcast-style breakdown, analyst or fan, in eight languages.</p>
+
+      <div class="metrics reveal">
+        <div class="metric"><span class="mval">0.150</span><span class="mlab">Brier score of the learned pass model</span><span class="mnote">vs 0.186 baseline &mdash; 20% better, body shape included</span></div>
+        <div class="metric"><span class="mval">7</span><span class="mlab">Decision-engine tools exposed over MCP</span><span class="mnote">Any MCP client can use them &mdash; the agents, or VS Code</span></div>
+        <div class="metric"><span class="mval">8</span><span class="mlab">Languages the AI explains in</span><span class="mnote">Analyst detail, or a fan's story</span></div>
+        <div class="metric"><span class="mval">10 Hz</span><span class="mlab">Synthetic match: 22 players, ball physics, offside</span><span class="mnote">A freeze-frame on every pass and shot</span></div>
+      </div>
+
+      <div class="note reveal">
+        <p class="eyebrow">The line the AI can't cross</p>
+        <p>The agents may only use numbers the tools return &mdash; the prompts forbid inventing a player, a minute, or a stat. If the primary model is rate-limited it retries on a backup and the badge says so, and with no model configured the app falls back to clearly-labelled template text. The intelligence lives in the analytics; the AI only puts it into words.</p>
+      </div>
+
+      <div class="actions reveal">
+        <a class="btn btn-live" href="https://www.youtube.com/watch?v=TPpbWodMg5A" target="_blank" rel="noopener noreferrer">Watch the demo</a>
+        <a class="btn" href="https://github.com/shanbhag003/the-better-ball" target="_blank" rel="noopener noreferrer">Code</a>
+        <a class="btn" href="https://github.com/microsoft/insidethegamehackathon" target="_blank" rel="noopener noreferrer">The hackathon</a>
+      </div>
+    </div>
+  </div>
+</section>
+
 <section class="band-gold">
   <div class="wrap">
     <p class="eyebrow reveal">The short version</p>
@@ -297,5 +342,25 @@
 <script src="analytics.js" defer></script>
 <script src="app.js" defer></script>
 <script src="chat.js" defer></script>
+<script>
+/* The Better Ball demo: click the poster to play the video inline (no JS → the
+   poster is a normal link that opens YouTube). */
+(function () {
+  var f = document.querySelector(".video-fac[data-yt]");
+  if (!f) return;
+  f.addEventListener("click", function (e) {
+    e.preventDefault();
+    var wrap = document.createElement("span");
+    wrap.className = "video-embed";
+    var ifr = document.createElement("iframe");
+    ifr.src = "https://www.youtube-nocookie.com/embed/" + f.getAttribute("data-yt") + "?autoplay=1&rel=0";
+    ifr.title = "The Better Ball — demo";
+    ifr.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
+    ifr.setAttribute("allowfullscreen", "");
+    wrap.appendChild(ifr);
+    f.parentNode.replaceChild(wrap, f);
+  });
+})();
+</script>
 </body>
 </html>
